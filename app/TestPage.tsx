@@ -9,6 +9,8 @@ import {SqlTable} from "./buhta-core/schema/SqlTable/SqlTable";
 import {SqlTableColumn} from "./buhta-core/schema/SqlTable/SqlTableColumn";
 import {ISqlStringDataType, SqlStringDataType} from "./buhta-core/schema/SqlTable/SqlStringDataType";
 import {ISchemaObject, SchemaObject} from "./buhta-core/schema/SchemaObject";
+import {GridLayout} from "./buhta-core/component/GridLayout";
+import {PersistentPage, IPersistentPageProps, PersistentPageComponent} from "./buhta-core/component/PersistentPage";
 
 
 interface IUser extends mongoose.Document {
@@ -201,7 +203,12 @@ export class TestPage extends React.Component<any,any> {
         // });
     };
 
+
+
     render(): JSX.Element {
+
+        let ppProps=PersistentPage.createNew();
+
         return (
             <div>тестовая стра!
                 <button onClick={this.handleClick1}>mongo test1</button>
@@ -217,6 +224,9 @@ export class TestPage extends React.Component<any,any> {
                 <br/>
                 <button onClick={this.handleClickSchemaLoad}>TEST SCHEMA LOAD</button>
                 <br/>
+                <PersistentPageComponent {...ppProps}>
+
+                </PersistentPageComponent>
             </div>
         );
     }
