@@ -4,25 +4,26 @@ import {GridLayout2} from "./GridLayout2";
 import {PersistentComponent, IPersistentComponentProps} from "./PersistentComponent";
 import {IPersistentLayoutProps, PersistentLayout} from "./PersistentLayout";
 import {SchemaObject, ISchemaObject} from "../schema/SchemaObject";
-import {ObjectID} from "mongodb";
+
 import {getSchema} from "../schema/Schema";
+import {getRandomString} from "../utils/getRandomString";
 
 let ReactGridLayout = require('react-grid-layout');
 
 export interface IPersistentPageProps extends IPersistentLayoutProps, ISchemaObject {
-    _id?: ObjectID;
-    parentObjectID?: ObjectID;
+    _id?: string;
+    parentObjectID?: string;
     name: string;
     description?: string;
 
     createDate: Date;
-    createUserID: ObjectID;
+    createUserID: string;
 
     changeDate?: Date;
-    changeUserID?: ObjectID;
+    changeUserID?: string;
 
     lockDateTime?: Date;
-    lockedByUserID?: ObjectID;
+    lockedByUserID?: string;
 
     position?: number;
 
@@ -42,8 +43,8 @@ export class PersistentPage extends SchemaObject<IPersistentPageProps> {
             name: "Новая page",
             columns: [],
             createDate: new Date(),
-            createUserID: new ObjectID(),
-            key: new ObjectID().toHexString()
+            createUserID: getRandomString(),
+            key: getRandomString()
         } as IPersistentPageProps;
     }
 
@@ -86,7 +87,11 @@ export class PersistentPageComponent extends PersistentComponent<IPersistentPage
 
         var cloned = JSON.parse(JSON.stringify(this.props)) as IPersistentPageProps;
         cloned.layout = this.persistentLayoutRef.layout;
-        console.log("save PersistentPageComponent",cloned);
+
+       // cloned._id=getRandomString();
+       // cloned.changeDate=new Date();
+
+        console.log("save PersistentPageComponent", cloned);
 
         getSchema().saveObject(cloned).then(()=> {
             console.log("save PersistentPageComponent Ok");

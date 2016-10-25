@@ -1,4 +1,4 @@
-import {ObjectID} from "mongodb";
+
 import {objectClasses} from "../objectClasses";
 
 export interface IPersistentObject {
@@ -7,19 +7,19 @@ export interface IPersistentObject {
 
 export interface ISchemaObject extends IPersistentObject {
 
-    _id?: ObjectID;
-    parentObjectID?: ObjectID;
+    _id?: string;
+    parentObjectID?: string;
     name: string;
     description?: string;
 
     createDate: Date;
-    createUserID: ObjectID;
+    createUserID: string;
 
     changeDate?: Date;
-    changeUserID?: ObjectID;
+    changeUserID?: string;
 
     lockDateTime?: Date;
-    lockedByUserID?: ObjectID;
+    lockedByUserID?: string;
 
     position?: number;
 

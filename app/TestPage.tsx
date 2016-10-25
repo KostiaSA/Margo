@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as mongoose from "mongoose";
 //import * as mongoose from "mongoose";
-import {MongoClient, ObjectID} from "mongodb";
+import {MongoClient} from "mongodb";
 import {convertDocs} from "./mag3305";
 import {convertMikDocs} from "./mik";
 import {getSchema} from "./buhta-core/schema/Schema";
@@ -183,17 +183,17 @@ export class TestPage extends React.Component<any,any> {
     handleClickSchemaLoad = ()=> {
         console.log("clickSchemaLoad");
 
-        getSchema().getObject(new ObjectID("580f1b6a5d4c403630eeb642")).then((x: ISchemaObject)=> {
-            console.log(x);
-        });
-
-        getSchema().getObject(new ObjectID("580f1b6a5d4c403630eeb642")).then((x: ISchemaObject)=> {
-            console.log(x);
-        });
-
-        getSchema().getObjectClassInstance(new ObjectID("580f1b6a5d4c403630eeb642")).then((x: SchemaObject<ISchemaObject>)=> {
-            console.log(x);
-        });
+        // getSchema().getObject(new ObjectID("580f1b6a5d4c403630eeb642")).then((x: ISchemaObject)=> {
+        //     console.log(x);
+        // });
+        //
+        // getSchema().getObject(new ObjectID("580f1b6a5d4c403630eeb642")).then((x: ISchemaObject)=> {
+        //     console.log(x);
+        // });
+        //
+        // getSchema().getObjectClassInstance(new ObjectID("580f1b6a5d4c403630eeb642")).then((x: SchemaObject<ISchemaObject>)=> {
+        //     console.log(x);
+        // });
 
 
         // getSchema().getObject("").then((obj: any)=> {
@@ -207,7 +207,7 @@ export class TestPage extends React.Component<any,any> {
     render(): JSX.Element {
 
         if (this.ppProps === undefined) {
-            getSchema().getObject(new ObjectID("580f8aeed2bda93e5c3a54eb"))
+            getSchema().getObject("u1oxh7gz75gw8dm6t0u5o2")
                 .then((obj: any)=> {
                     this.ppProps = obj;
                     this.forceUpdate();

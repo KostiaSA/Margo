@@ -1,7 +1,8 @@
 import {ISqlTableColumn, SqlTableColumn} from "./SqlTableColumn";
 import {ISchemaObject, PersistentObject, SchemaObject} from "../SchemaObject";
-import {ObjectID} from "mongodb";
+
 import {getObjectClassInstance} from "../Schema";
+import {getRandomString} from "../../utils/getRandomString";
 
 export interface ISqlTable extends ISchemaObject {
     columns: ISqlTableColumn[];
@@ -22,7 +23,7 @@ export class SqlTable extends SchemaObject<ISqlTable> {
             name: "Новая таблица",
             columns: [],
             createDate: new Date(),
-            createUserID: new ObjectID()
+            createUserID: getRandomString()
         } as ISqlTable;
     }
 

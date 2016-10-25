@@ -1,9 +1,10 @@
 import * as _ from "lodash";
 import {ISchemaObject, IPersistentObject, PersistentObject, SchemaObject} from "./SchemaObject";
-import {MongoClient, Db, UpdateWriteOpResult, ObjectID} from "mongodb";
+import {MongoClient, Db, UpdateWriteOpResult} from "mongodb";
 import {sleep} from "../utils/sleep";
 import {getInstantPromise} from "../utils/getInstantPromise";
 import {objectClasses} from "../objectClasses";
+import {getRandomString} from "../utils/getRandomString";
 
 
 let defaultSchema: Schema;
@@ -43,50 +44,55 @@ export class Schema {
         }
     }
 
-    resetObjectCache(id: ObjectID) {
-        delete this.objects_cache[id.toHexString()];
+    resetObjectCache(id: string) {
+        delete this.objects_cache[id];
     }
 
-    async getObject(id: ObjectID): Promise<ISchemaObject> {
-        let obj = this.objects_cache[id.toHexString()];
+    async getObject(id: string): Promise<ISchemaObject> {
+        let obj = this.objects_cache[id];
         if (obj !== undefined) {
             console.log("cache...");
             return getInstantPromise<ISchemaObject>(obj);
         }
-        else if (this.objects_cache_is_loading[id.toHexString()] === true) {
+        else if (this.objects_cache_is_loading[id] === true) {
             // если уже послан запрос на загрузку объекта, то просто ждем 200мс и запрашиваем снова
             await sleep(200);
             return this.getObject(id);
         }
         else {
-            console.log("load...");
-            this.objects_cache_is_loading[id.toHexString()] = true;
+            (window as any)["xxx"] = id;
+            console.log("load...", id);
+            this.objects_cache_is_loading[id] = true;
             let db = await this.getMongoDb();
             var collection = db.collection("SchemaObject");
             let result = await collection.find({_id: id}).next();
-            this.objects_cache_is_loading[id.toHexString()] = false;
-            this.objects_cache[id.toHexString()] = result;
+            this.objects_cache_is_loading[id] = false;
+            this.objects_cache[id] = result;
             return getInstantPromise<ISchemaObject>(result);
         }
     }
 
     async saveObject(obj: ISchemaObject): Promise<void> {
+
         let db = await this.getMongoDb();
         var collection = db.collection("SchemaObject");
-        if (obj._id === undefined) {
-            let result = await collection.insertOne(obj);
-            obj._id = result.insertedId;
-            console.log(result);
-            return getInstantPromise<void>(undefined);
-        }
-        else {
-            let result = await collection.updateOne({_id: obj._id}, obj);
-            console.log(result);
-            return getInstantPromise<void>(undefined);
-        }
+        if (obj._id === undefined) //{
+            obj._id = getRandomString();
+        //     let result = await collection.insertOne(obj);
+        //     console.log(result);
+        //     return getInstantPromise<void>(undefined);
+        // }
+        // else {
+        console.log('запись', obj);
+        let result = await collection.updateOne({_id: obj._id}, JSON.parse(JSON.stringify(obj)), {upsert: true});
+        if (result.upsertedCount + result.modifiedCount !== 1)
+            throw `error saving SchemaObject (_id=${obj._id})`
+        console.log(result);
+        return getInstantPromise<void>(undefined);
+//        }
     }
 
-    async getObjectClassInstance<T extends SchemaObject<ISchemaObject>>(id: ObjectID): Promise<T> {
+    async getObjectClassInstance<T extends SchemaObject<ISchemaObject>>(id: string): Promise<T> {
         return getInstantPromise(getObjectClassInstance<T>(await this.getObject(id)));
     }
 
