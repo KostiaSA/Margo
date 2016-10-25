@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": false,
+    "target": "es6",
+    //"outDir": "../distdist",
+    "declaration": false,
+    "module": "commonjs",
+    "jsx": "react",
+    "experimentalDecorators": true,
+    "strictNullChecks": true,
+    "lib": [
+      "es6",
+      "es2015.promise",
+      "es2017",
+      "dom"
+    ],
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "node_modules",
+    ".js"
+    //"**/*x.d.ts"
+  ]
+}
