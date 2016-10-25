@@ -83,16 +83,23 @@ export class PersistentPageComponent extends PersistentComponent<IPersistentPage
 
     handleSave = ()=> {
         console.log("save PersistentPageComponent");
-        getSchema().saveObject(this.props).then(()=>{
+
+        var cloned = JSON.parse(JSON.stringify(this.props)) as IPersistentPageProps;
+        cloned.layout = this.persistentLayoutRef.layout;
+        console.log("save PersistentPageComponent",cloned);
+
+        getSchema().saveObject(cloned).then(()=> {
             console.log("save PersistentPageComponent Ok");
         });
     }
+
+    persistentLayoutRef: PersistentLayout;
 
     render() {
         return (
             <div style={{ border:"2px solid sliver"}}>
                 <span onClick={this.handleSave}>сохранить</span>
-                <PersistentLayout {...this.props}>
+                <PersistentLayout ref={(e)=>{this.persistentLayoutRef=e}} {...this.props}>
 
                 </PersistentLayout>
             </div>

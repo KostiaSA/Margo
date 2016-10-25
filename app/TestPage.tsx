@@ -165,15 +165,14 @@ export class TestPage extends React.Component<any,any> {
     handleClickSchema = ()=> {
         console.log("clickSchema");
 
-        let table=SqlTable.createNew();
-        let col=SqlTableColumn.createNew();
-        col.name="номер1";
-        col.description="номер организации1";
-        col.dataType=SqlStringDataType.createNew();
+        let table = SqlTable.createNew();
+        let col = SqlTableColumn.createNew();
+        col.name = "номер1";
+        col.description = "номер организации1";
+        col.dataType = SqlStringDataType.createNew();
         table.columns.push(col);
 
         getSchema().saveObject(table);
-
 
 
         // getSchema().getObject("").then((obj: any)=> {
@@ -184,18 +183,17 @@ export class TestPage extends React.Component<any,any> {
     handleClickSchemaLoad = ()=> {
         console.log("clickSchemaLoad");
 
-        getSchema().getObject(new ObjectID("580f1b6a5d4c403630eeb642")).then((x:ISchemaObject)=>{
+        getSchema().getObject(new ObjectID("580f1b6a5d4c403630eeb642")).then((x: ISchemaObject)=> {
             console.log(x);
         });
 
-        getSchema().getObject(new ObjectID("580f1b6a5d4c403630eeb642")).then((x:ISchemaObject)=>{
+        getSchema().getObject(new ObjectID("580f1b6a5d4c403630eeb642")).then((x: ISchemaObject)=> {
             console.log(x);
         });
 
-        getSchema().getObjectClassInstance(new ObjectID("580f1b6a5d4c403630eeb642")).then((x:SchemaObject<ISchemaObject>)=>{
+        getSchema().getObjectClassInstance(new ObjectID("580f1b6a5d4c403630eeb642")).then((x: SchemaObject<ISchemaObject>)=> {
             console.log(x);
         });
-
 
 
         // getSchema().getObject("").then((obj: any)=> {
@@ -203,32 +201,41 @@ export class TestPage extends React.Component<any,any> {
         // });
     };
 
+    ppProps: IPersistentPageProps;
 
 
     render(): JSX.Element {
 
-        let ppProps=PersistentPage.createNew();
+        if (this.ppProps === undefined) {
+            getSchema().getObject(new ObjectID("580f8aeed2bda93e5c3a54eb"))
+                .then((obj: any)=> {
+                    this.ppProps = obj;
+                    this.forceUpdate();
+                });
 
-        return (
-            <div>тестовая стра!
-                <button onClick={this.handleClick1}>mongo test1</button>
-                <button onClick={this.handleClick2}>test2</button>
-                <br/>
-                <button onClick={this.handleClick3}>MONGO DIRECT test</button>
-                <br/>
-                <br/>
-                <button onClick={this.handleClick4}>MONGO CONVERT MAG3305</button>
-                <br/>
-                <br/>
-                <button onClick={this.handleClickSchema}>TEST SCHEMA CREATE</button>
-                <br/>
-                <button onClick={this.handleClickSchemaLoad}>TEST SCHEMA LOAD</button>
-                <br/>
-                <PersistentPageComponent {...ppProps}>
+            return <div>загрузка...</div>
+        }
+        else
+            return (
+                <div>тестовая стра!
+                    <button onClick={this.handleClick1}>mongo test1</button>
+                    <button onClick={this.handleClick2}>test2</button>
+                    <br/>
+                    <button onClick={this.handleClick3}>MONGO DIRECT test</button>
+                    <br/>
+                    <br/>
+                    <button onClick={this.handleClick4}>MONGO CONVERT MAG3305</button>
+                    <br/>
+                    <br/>
+                    <button onClick={this.handleClickSchema}>TEST SCHEMA CREATE</button>
+                    <br/>
+                    <button onClick={this.handleClickSchemaLoad}>TEST SCHEMA LOAD</button>
+                    <br/>
+                    <PersistentPageComponent {...this.ppProps}>
 
-                </PersistentPageComponent>
-            </div>
-        );
+                    </PersistentPageComponent>
+                </div>
+            );
     }
 
 
