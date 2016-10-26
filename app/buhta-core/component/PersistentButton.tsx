@@ -1,21 +1,29 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
-import {GridLayout2} from "./GridLayout2";
 import {PersistentComponent, IPersistentComponentProps} from "./PersistentComponent";
+import ReactChild = React.ReactChild;
+import {PersistentItemDesignToolbar, PersistentItemDesignToolItem} from "./PersistentItemDesignToolbar";
 
-let ReactGridLayout = require('react-grid-layout');
-
-export interface IPersistentButtonProps extends IPersistentComponentProps{
-    text?:string;
+export interface IPersistentButtonProps extends IPersistentComponentProps {
+    text?: string;
 }
 
 export class PersistentButton extends PersistentComponent<IPersistentButtonProps> {
 
     render() {
         return (
-            <button>
-                {this.props.text}
-            </button>
+            <div {...this.props}>
+                <div style={{ border:"1px solid silver", overflow:"hidden", height:"100%"}}>
+                    <button className="button">
+                        {this.props.text}
+                        {this.getClearChildren()}
+                    </button>
+                    <PersistentItemDesignToolbar>
+                        <PersistentItemDesignToolItem iconClass="fa fa-home drag-me"></PersistentItemDesignToolItem>
+                        <PersistentItemDesignToolItem iconClass="fa fa-cog" isPullRight></PersistentItemDesignToolItem>
+                    </PersistentItemDesignToolbar>
+                    {this.getResizableHandler()}
+                </div>
+            </div>
         )
     }
 }

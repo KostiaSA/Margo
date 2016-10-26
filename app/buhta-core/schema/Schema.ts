@@ -60,8 +60,6 @@ export class Schema {
             return this.getObject(id);
         }
         else {
-            (window as any)["xxx"] = id;
-            console.log("load...", id);
             this.objects_cache_is_loading[id] = true;
             let db = await this.getMongoDb();
             var collection = db.collection("SchemaObject");
@@ -76,31 +74,18 @@ export class Schema {
 
         let db = await this.getMongoDb();
         var collection = db.collection("SchemaObject");
-        if (obj._id === undefined) //{
+        if (obj._id === undefined)
             obj._id = getRandomString();
-        //     let result = await collection.insertOne(obj);
-        //     console.log(result);
-        //     return getInstantPromise<void>(undefined);
-        // }
-        // else {
         console.log('запись', obj);
         let result = await collection.updateOne({_id: obj._id}, JSON.parse(JSON.stringify(obj)), {upsert: true});
         if (result.upsertedCount + result.modifiedCount !== 1)
-            throw `error saving SchemaObject (_id=${obj._id})`
-        console.log(result);
+            throw `error saving SchemaObject (_id=${obj._id})`;
         return getInstantPromise<void>(undefined);
-//        }
     }
 
     async getObjectClassInstance<T extends SchemaObject<ISchemaObject>>(id: string): Promise<T> {
         return getInstantPromise(getObjectClassInstance<T>(await this.getObject(id)));
     }
-
-    //     let classConstructor = objectClasses[obj._class] as any;
-    //     if (classConstructor === undefined)
-    //         throw  `class "${obj._class}" is not registered`;
-    //     return new classConstructor(obj);
-    // }
 
 }
 

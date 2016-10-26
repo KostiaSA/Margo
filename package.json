@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/bluebird": "^3.0.35",
+    "@types/classnames": "0.0.31",
     "@types/electron": "^1.4.24",
     "@types/lodash": "^4.14.37",
     "@types/mongodb": "^2.1.33",
@@ -19,7 +20,10 @@
     "@types/react-dom": "^0.14.18",
     "@types/tedious": "^1.8.28",
     "bluebird": "^3.4.6",
+    "bulma": "^0.2.3",
+    "classnames": "^2.2.5",
     "electron": "^1.4.4",
+    "font-awesome": "^4.7.0",
     "lodash": "^4.16.4",
     "mongoose": "^4.6.4",
     "mssql": "^3.3.0",

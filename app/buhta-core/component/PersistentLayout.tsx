@@ -2,6 +2,8 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {GridLayout2} from "./GridLayout2";
 import {PersistentComponent, IPersistentComponentProps} from "./PersistentComponent";
+import {PersistentItemDesignToolbar, PersistentItemDesignToolItem} from "./PersistentItemDesignToolbar";
+import {PersistentButton} from "./PersistentButton";
 
 let ReactGridLayout = require('react-grid-layout');
 
@@ -16,9 +18,9 @@ export interface IItemLayout {
     minH?: number;
     maxH?: number;
     static?: boolean;
-    isDraggable?:boolean;
-    isResizable?:boolean;
-    moved?:boolean;
+    isDraggable?: boolean;
+    isResizable?: boolean;
+    moved?: boolean;
 
 }
 
@@ -46,23 +48,32 @@ export class PersistentLayout extends PersistentComponent<IPersistentLayoutProps
     };
 
     onLayoutChange = (layout: IItemLayout[])=> {
-        this.layout=layout;
+        this.layout = layout;
         console.log(layout);
     };
 
     render() {
         return (
-            <ReactGridLayout className="layout"
-                             style={{ border:"1px solid green"}}
-                             layout={this.layout}
-                             cols={this.props.cols || 12}
-                             rowHeight={this.props.rowHeight || 30}
-                             width={this.props.width || 800}
-                             onLayoutChange={this.onLayoutChange}>
-                <div style={{ border:"1px solid red"}} key={'a'}>asssssss</div>
-                <div style={{ border:"1px solid blue"}} key={'b'}>b</div>
-                <div style={{ border:"1px solid black"}} key={'c'}>c</div>
-            </ReactGridLayout>
+            <div style={{ position :"relative" , border:"1px solid green", overflow:"hidden" }}>
+                <ReactGridLayout className="layout"
+
+                                 layout={this.layout}
+                                 cols={this.props.cols || 12}
+                                 rowHeight={this.props.rowHeight || 30}
+                                 width={this.props.width || 800}
+                                 onLayoutChange={this.onLayoutChange}
+                                 draggableHandle=".drag-me"
+                >
+                    <PersistentButton key={'a'} _class="buhta.PersistentButton">222asssssss</PersistentButton>
+                    <div style={{ border:"1px solid blue"}} key={'b'}>b</div>
+                    <div style={{ border:"1px solid black"}} key={'c'}>c</div>
+                </ReactGridLayout>
+                <PersistentItemDesignToolbar items={[
+                    { iconClass: "fa fa-cog", isPullRight:true}
+                ]}>
+                    <PersistentItemDesignToolItem iconClass="fa fa-home"></PersistentItemDesignToolItem>
+                </PersistentItemDesignToolbar>
+            </div>
 
         )
     }
