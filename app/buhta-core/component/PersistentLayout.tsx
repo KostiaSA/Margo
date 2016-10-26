@@ -58,8 +58,8 @@ export class PersistentLayout extends PersistentComponent<IPersistentLayoutProps
                 <ReactGridLayout className="layout"
 
                                  layout={this.layout}
-                                 cols={this.props.cols || 12}
-                                 rowHeight={this.props.rowHeight || 30}
+                                 cols={this.props.cols || 48}
+                                 rowHeight={this.props.rowHeight || 10}
                                  width={this.props.width || 800}
                                  onLayoutChange={this.onLayoutChange}
                                  draggableHandle=".drag-me"

@@ -18,6 +18,7 @@
     "@types/mssql": "^3.1.29",
     "@types/react": "^0.14.41",
     "@types/react-dom": "^0.14.18",
+    "@types/react-split-pane": "^0.1.4",
     "@types/tedious": "^1.8.28",
     "bluebird": "^3.4.6",
     "bulma": "^0.2.3",
@@ -30,6 +31,7 @@
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-grid-layout": "^0.13.9",
+    "react-split-pane": "^0.1.51",
     "tedious": "^1.14.0"
   }
 }

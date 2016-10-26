@@ -52,7 +52,7 @@ export class PersistentItemDesignToolItem extends React.Component<IPersistentIte
             "drag-me": this.props.isDrag
         });
         return (
-            <i className={cls} style={{fontSize:16}} onClick={this.onClick}></i>
+            <i className={cls} style={{fontSize:15, color:"sandybrown"}} onClick={this.onClick}></i>
         )
     }
 }

@@ -18,7 +18,7 @@ export class PersistentButton extends PersistentComponent<IPersistentButtonProps
                         {this.getClearChildren()}
                     </button>
                     <PersistentItemDesignToolbar>
-                        <PersistentItemDesignToolItem iconClass="fa fa-home drag-me"></PersistentItemDesignToolItem>
+                        <PersistentItemDesignToolItem iconClass="fa fa-th-large drag-me"></PersistentItemDesignToolItem>
                         <PersistentItemDesignToolItem iconClass="fa fa-cog" isPullRight></PersistentItemDesignToolItem>
                     </PersistentItemDesignToolbar>
                     {this.getResizableHandler()}
