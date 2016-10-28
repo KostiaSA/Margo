@@ -1,3 +1,4 @@
+import * as React from "react";
 import {ITreeListDataSource, ITreeListDataSourceNode} from "./TreeListDataSource";
 import {getInstantPromise} from "../../utils/getInstantPromise";
 
@@ -11,6 +12,11 @@ export class TreeListTestDataSource implements ITreeListDataSource<ITreeListData
                 title: "нода N" + i,
                 key:i
             };
+
+            if (i%5===0){
+                node.children=[{folder:true, title: <div>жопа!! {i} <div>жопа!! {i}</div> <div>жопа!! {i}</div> <div>жопа!! {i}</div> </div>,
+                    key:i}]
+            }
             nodes.push(node);
         }
 

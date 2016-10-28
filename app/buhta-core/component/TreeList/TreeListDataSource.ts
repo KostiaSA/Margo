@@ -1,10 +1,10 @@
 
 export interface ITreeListDataSourceNode {
-    readonly title: string;
-    readonly key: string | number;
-    readonly children?: ITreeListDataSourceNode[];
-    readonly folder?: boolean;
-    readonly data?: any;
+    title: string | React.ReactNode;
+    key: string | number;
+    children?: ITreeListDataSourceNode[];
+    folder?: boolean;
+    data?: any;
 }
 
 // export interface DataSourceColumn extends GridColumnProps {

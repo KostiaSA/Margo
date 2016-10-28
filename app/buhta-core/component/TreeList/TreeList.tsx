@@ -1,4 +1,6 @@
 import * as React from "react";
+import * as ReactDOM from "react-dom";
+import * as _ from "lodash";
 import {PersistentComponent, IPersistentComponentProps} from "../PersistentComponent";
 import ReactChild = React.ReactChild;
 import {PersistentItemDesignToolbar, PersistentItemDesignToolItem} from "../PersistentItemDesignToolbar";
@@ -16,11 +18,11 @@ export interface ITreeListProps extends React.HTMLAttributes<Element> {
 export class TreeList extends React.Component<ITreeListProps, any> {
 
     $fancyTree: any;
-    treeApi:any;
+    treeApi: any;
 
     componentDidMount() {
 
-       w.$(this.$fancyTree).fancytree(
+        w.$(this.$fancyTree).fancytree(
             {
                 toggleEffect: false,
 //                extensions: ["edit", "bopContextMenu", "dnd"],
@@ -50,6 +52,10 @@ export class TreeList extends React.Component<ITreeListProps, any> {
                     //dragStart: this.props.onDragStart,
                     //dragEnter: this.props.onDragEnter,
                     //dragDrop: this.props.onDragDrop
+                },
+                renderNode: (event: any, data: any)=> {
+                    if (!_.isString(data.node.title))
+                        ReactDOM.render(data.node.title, data.node.span.getElementsByClassName("fancytree-title")[0]);
                 }
             });
 
