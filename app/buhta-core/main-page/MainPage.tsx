@@ -1,5 +1,7 @@
 import * as React from "react";
 import * as SplitPane from 'react-split-pane';
+import {TreeList} from "../component/TreeList/TreeList";
+import {TreeListTestDataSource} from "../component/TreeList/TreeListTestDataSource";
 
 export class MainPage extends React.Component<any,any> {
     constructor(props: any, context: any) {
@@ -43,7 +45,8 @@ export class MainPage extends React.Component<any,any> {
         let navStyle = {
             flex: "0 0 auto",
             border: "1px solid gray",
-            overflow:"auto"
+            overflow:"auto",
+            maxWidth:300,
 
 //            padding: "0 20px",
 //            borderBottom: "1px solid #e5e5e5"
@@ -72,39 +75,61 @@ export class MainPage extends React.Component<any,any> {
                 </div>
                 <div style={contentStyle}>
                     <div style={navStyle}>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
-                        Это навигатор бля!<br/>
+                        <aside className="menu">
+                            <p className="menu-label">
+                                General
+                            </p>
+                            <ul className="menu-list">
+                                <li><a href="#">Dashboard</a></li>
+                                <li><a href="#">Customers</a></li>
+                            </ul>
+                            <p className="menu-label">
+                                Administration
+                            </p>
+                            <ul className="menu-list">
+                                <li><a href="#">Team Settings</a></li>
+                                <li>
+                                    <a className="is-active" href="#">Manage Your Team</a>
+                                    <ul>
+                                        <li><a href="#">Members</a></li>
+                                        <li><a href="#">Plugins</a></li>
+                                        <ul className="menu-list">
+                                            <li><a href="#">Team Settings</a></li>
+                                            <li>
+                                                <a className="is-active" href="#">ManageYourTeamManageYourTeamManageYourTeam</a>
+                                                <ul>
+                                                    <li><a href="#">Members</a></li>
+                                                    <li><a href="#">Plugins</a></li>
+                                                    <li><a href="#">Add a member</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Invitations</a></li>
+                                            <li><a href="#">Authentication</a></li>
+                                        </ul>
+
+                                        <li><a href="#">Add a member</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">Invitations</a></li>
+                                <li><a href="#">Authentication</a></li>
+                            </ul>
+                            <p className="menu-label">
+                                Transactions
+                            </p>
+                            <ul className="menu-list">
+                                <li><a href="#">Payments</a></li>
+                                <li><a href="#">Transfers</a></li>
+                                <li><a href="#">Balance</a></li>
+                            </ul>
+                        </aside>
                     </div>
                     <div style={pageStyle}>
                         Этоxpagexбля!xЭтоxpagexбля!xЭтоxpagexбля!xЭтоxpagexбля!xЭтоxpagexбля!<br/>
                         Это page бля! Это page бля! Это page бля! Это page бля! Это page бля!<br/>
                         Это page бля! Это page бля! Это page бля! Это page бля! Это page бля!<br/>
-                        Это page бля! Это page бля! Это page бля! Это page бля! Это page бля!<br/>
-                        Это page бля! Это page бля! Это page бля! Это page бля! Это page бля!<br/>
-                        Это page бля! Это page бля! Это page бля! Это page бля! Это page бля!<br/>
-                        Это page бля! Это page бля! Это page бля! Это page бля! Это page бля!<br/>
-                        Это page бля! Это page бля! Это page бля! Это page бля! Это page бля!<br/>
-                        Это page бля! Это page бля! Это page бля! Это page бля! Это page бля!<br/>
-                        Это page бля! Это page бля! Это page бля! Это page бля! Это page бля!<br/>
-                        Это page бля! Это page бля! Это page бля! Это page бля! Это page бля!<br/>
-                        Это page бля! Это page бля! Это page бля! Это page бля! Это page бля!<br/>
+                        <TreeList dataSource={new TreeListTestDataSource()}>
+
+                        </TreeList>
                         Это page бля! Это page бля! Это page бля! Это page бля! Это page бля!<br/>
                         Это page бля! Это page бля! Это page бля! Это page бля! Это page бля!<br/>
                     </div>
