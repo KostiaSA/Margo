@@ -17,6 +17,7 @@ export class TreeListTestDataSource implements ITreeListDataSource<ITreeListData
                 node.children=[{folder:true, title: <div>жопа!! {i} <div>жопа!! {i}</div> <div>жопа!! {i}</div> <div>жопа!! {i}</div> </div>,
                     key:i}]
             }
+
             nodes.push(node);
         }
 

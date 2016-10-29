@@ -10,6 +10,13 @@
     <link href="./node_modules/react-resizable/css/styles.css" rel="stylesheet">
     <link href="./node_modules/jquery.fancytree/dist/skin-win8/ui.fancytree.css" rel="stylesheet">
 
+
+    <!--<link rel="stylesheet" href="content/style.css" />-->
+    <link href="./node_modules/syncfusion-javascript/Content/ej/web/ej.widgets.core.min.css" rel="stylesheet" />
+    <link href="./node_modules/syncfusion-javascript/Content/ej/web/default-theme/ej.theme.min.css" rel="stylesheet" />
+    <link href="./node_modules/syncfusion-javascript/Content/ej/web/responsive-css/ej.responsive.css" rel="stylesheet" />
+    <link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
     <link href="./app.css" rel="stylesheet">
 
     <!--<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>-->
@@ -38,6 +45,9 @@
 
 <script>
 // You can also require other files to run in this process
+    window.$ = window.jQuery = require('jquery')
+    require("jqueryui");
+    require("syncfusion-javascript/Scripts/ej/web/ej.web.all.min.js");
     require('./app/appstart.js');
 </script>
 </html>

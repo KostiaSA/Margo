@@ -76,7 +76,6 @@ export class TreeList extends React.Component<ITreeListProps, any> {
         return (
 
             <div style={this.props.style} className="tree-view">
-                это fancy
                 <div className="fancytree" ref={(e)=>this.$fancyTree=e}></div>
             </div>
 

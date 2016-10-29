@@ -3,15 +3,16 @@ import * as ReactDOM from "react-dom";
 import {TestPage} from "./TestPage";
 import {init} from "./buhta-core/init";
 import {MainPage} from "./buhta-core/main-page/MainPage";
+import {MainPage2} from "./buhta-core/main-page/MainPage2";
 
 init();
 
 
 ReactDOM.render(
     (
-        <MainPage>
+        <MainPage2>
 
-        </MainPage>
+        </MainPage2>
     ),
     document.getElementById("container")!//,
     //()=>registeredAllRoutes()
