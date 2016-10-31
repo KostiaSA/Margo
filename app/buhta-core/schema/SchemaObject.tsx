@@ -1,6 +1,7 @@
 import {objectClasses} from "../objectClasses";
 import {IObjectDesignerFormat} from "../designer/ObjectDesignerFormat";
 import {StringAttrEditor} from "../designer/editors/StringAttrEditor";
+import {DateTimeAttrEditor} from "../designer/editors/DateTimeAttrEditor";
 
 export interface IPersistentObject {
     _class: string;
@@ -102,6 +103,7 @@ export class SchemaObject<T extends ISchemaObject> extends PersistentObject<T> {
         let ret = super.getDesignerFormat();
         ret.attributes.push({ _class: StringAttrEditor.getClassName(),attrName: "name", title: "имя"});
         ret.attributes.push({ _class: StringAttrEditor.getClassName(),attrName: "description", title: "описание"});
+        ret.attributes.push({ _class: DateTimeAttrEditor.getClassName(),attrName: "createDate", title: "когда создан", isReadonly:true});
         return ret;
     }
 

@@ -5,6 +5,7 @@ export interface IAttrEditor extends IPersistentObject {
     title?: string;
     //editor: IAttrEditor;
     editorGroup?: string;
+    isReadonly?: boolean;
 }
 
 export class AttrEditor {
@@ -24,6 +25,11 @@ export class AttrEditor {
         editedObj[this.edt.attrName] = value;
         //console.log("setAttrValue",value,editedObj);
     }
+
+    getIsReadonly(): boolean {
+        return this.edt.isReadonly === true;
+    }
+
 }
 
 // export let attrEditors: { [className: string]: Function;} = {};

@@ -89,8 +89,7 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
             fit: true,
             data: this.getObjectEditors(this.editedObject),
             onBeforeEdit: (index: number, row: IEasyPropertyGridRow): boolean => {
-                //console.log(row);
-                return true;
+                return !row._editorInstance.getIsReadonly();  // делаем cancel
             },
             onEndEdit: (index: number, row: IEasyPropertyGridRow) => {
                 row._editorInstance.setAttrValue(this.editedObject, row.value);
