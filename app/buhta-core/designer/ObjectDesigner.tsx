@@ -19,7 +19,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
 
 
     selectedObject: IPersistentObject;
-    propertyEditorInstance: React.Component<any,any>;
+    propertyEditorInstance: ObjectPropertEditor;
 
     renderPropertyEditor(): JSX.Element {
         return <ObjectPropertEditor ref={(e)=>this.propertyEditorInstance=e}
@@ -67,9 +67,8 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
         let treeOptions = {
             data: this.createTreeData(),
             onSelect: (node: any)=> {
-                console.log(node);
                 this.selectedObject = node.obj;
-                this.propertyEditorInstance.forceUpdate();
+                this.propertyEditorInstance.setEditedObject(this.selectedObject);
             }
             // data: [{
             //     "id": 1,

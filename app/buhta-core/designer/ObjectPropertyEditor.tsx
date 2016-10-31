@@ -51,6 +51,16 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
     }
 
 
+    // public componentDidUpdate(prevProps: IObjectPropertEditorProps, prevState: any, prevContext: any): void {
+    //     if (prevProps.editedObject!==this.props.editedObject){
+    //         ($(this.peContainer) as any).propertygrid("loadData",this.getObjectEditors(this.props.editedObject));
+    //     }
+    // }
+
+    setEditedObject(obj:IPersistentObject){
+        ($(this.peContainer) as any).propertygrid("loadData",this.getObjectEditors(obj));
+    }
+
     componentDidMount() {
 
         let peOptions = {
