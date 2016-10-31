@@ -3,22 +3,33 @@ import * as ReactDOM from "react-dom";
 import {Layout} from "../ui/Layout";
 import {IPersistentObject, PersistentObject} from "../schema/SchemaObject";
 import {objectClasses} from "../objectClasses";
-import {IObjectDesignerAttr} from "./ObjectDesignerFormat";
 import {getObjectInstanceOfType} from "../utils/getObjectInstanceOfType";
+import {AttrEditor, IAttrEditor} from "./editors/AttrEditor";
 
 export interface IObjectPropertEditorProps {
     editedObject: IPersistentObject;
 }
+
+interface IEasyPropertyGridRow {
+    name: string;
+    value: any,
+    group?: string,
+    editor: string,
+    _editorInstance: AttrEditor,  // наша добавка
+}
+
 
 export class ObjectPropertEditor extends React.Component<IObjectPropertEditorProps,any> {
     constructor(props: any, context: any) {
         super(props, context);
         this.props = props;
         this.context = context;
+        this.editedObject = this.props.editedObject;
     }
 
     peContainer: any;
     peInstance: any;
+    editedObject: IPersistentObject;
 
     render(): JSX.Element {
         return (
@@ -37,13 +48,23 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
 
         let designerFormat = objInstance.getDesignerFormat();
 
-        designerFormat.attributes.forEach((item: IObjectDesignerAttr)=> {
-            ret.push({
+        designerFormat.attributes.forEach((item: IAttrEditor)=> {
+
+            let editorHandler = objectClasses[item._class];
+            if (!editorHandler)
+                throw `attr editor class "${item._class}" is not registered`;
+
+            let editorInstance = getObjectInstanceOfType(editorHandler, [item]) as AttrEditor;
+
+            let row: IEasyPropertyGridRow = {
                 name: item.title || item.attrName,
                 value: obj[item.attrName],
                 group: item.editorGroup,
-                editor: 'text'
-            })
+                editor: editorInstance.getEasyEditor(),
+                _editorInstance: editorInstance,
+            };
+            ret.push(row);
+
         }, this);
 
         return ret;
@@ -57,18 +78,23 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
     //     }
     // }
 
-    setEditedObject(obj:IPersistentObject){
-        ($(this.peContainer) as any).propertygrid("loadData",this.getObjectEditors(obj));
+    setEditedObject(obj: IPersistentObject) {
+        this.editedObject = obj;
+        ($(this.peContainer) as any).propertygrid("loadData", this.getObjectEditors(this.editedObject));
     }
 
     componentDidMount() {
 
         let peOptions = {
             fit: true,
-            data: this.getObjectEditors(this.props.editedObject),
-            onBeforeEdit: (index: number, row: any):boolean => {
-                console.log(row);
-                return false;
+            data: this.getObjectEditors(this.editedObject),
+            onBeforeEdit: (index: number, row: IEasyPropertyGridRow): boolean => {
+                //console.log(row);
+                return true;
+            },
+            onEndEdit: (index: number, row: IEasyPropertyGridRow) => {
+                row._editorInstance.setAttrValue(this.editedObject, row.value);
+                //console.log(row);
             }
         };
 

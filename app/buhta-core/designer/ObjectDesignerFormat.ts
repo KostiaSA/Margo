@@ -1,27 +1,23 @@
-export const STRING_EDITOR = "string";
-export const NUMBER_EDITOR = "number";
+import {IAttrEditor} from "./editors/AttrEditor";
 
 
-export interface IObjectDesignerAttrEditor {
-    editorClass: string;
-}
+// export const NUMBER_EDITOR = "number";
+//
+//
+//
+//
+// export interface IObjectDesignerNumberAttrEditor extends IAttrEditor {
+//     min?: number;
+//     max?: number;
+// }
 
-export interface IObjectDesignerStringAttrEditor extends IObjectDesignerAttrEditor {
-    maxLen?: number;
-}
-
-export interface IObjectDesignerNumberAttrEditor extends IObjectDesignerAttrEditor {
-    min?: number;
-    max?: number;
-}
-
-export interface IObjectDesignerAttr {
-    attrName: string;
-    title?:string;
-    editor: IObjectDesignerAttrEditor;
-    editorGroup?: string;
-}
+// export interface IObjectDesignerAttr {
+//     attrName: string;
+//     title?:string;
+//     editor: IAttrEditor;
+//     editorGroup?: string;
+// }
 
 export interface IObjectDesignerFormat {
-    attributes: IObjectDesignerAttr[];
+    attributes: IAttrEditor[];
 }

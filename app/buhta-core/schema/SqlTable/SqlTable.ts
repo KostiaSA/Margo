@@ -3,7 +3,8 @@ import {ISchemaObject, PersistentObject, SchemaObject} from "../SchemaObject";
 
 import {getObjectClassInstance} from "../Schema";
 import {getRandomString} from "../../utils/getRandomString";
-import {IObjectDesignerFormat, STRING_EDITOR} from "../../designer/ObjectDesignerFormat";
+import {IObjectDesignerFormat} from "../../designer/ObjectDesignerFormat";
+import {StringAttrEditor} from "../../designer/editors/StringAttrEditor";
 
 export interface ISqlTable extends ISchemaObject {
     sqlName?: string;
@@ -30,7 +31,7 @@ export class SqlTable extends SchemaObject<ISqlTable> {
 
     getDesignerFormat(): IObjectDesignerFormat {
         let ret = super.getDesignerFormat();
-        ret.attributes.push({attrName: "sqlName", title: "имя таблицы", editor: {editorClass: STRING_EDITOR}});
+        ret.attributes.push({attrName: "sqlName", title: "имя таблицы", _class: StringAttrEditor.getClassName()});
         return ret;
     }
 

@@ -1,6 +1,7 @@
 import {IPersistentObject, PersistentObject} from "../SchemaObject";
 import {ISqlDataType} from "./SqlDataType";
-import {IObjectDesignerFormat, STRING_EDITOR} from "../../designer/ObjectDesignerFormat";
+import {IObjectDesignerFormat} from "../../designer/ObjectDesignerFormat";
+import {StringAttrEditor} from "../../designer/editors/StringAttrEditor";
 
 export interface ISqlTableColumn extends IPersistentObject {
     name: string;
@@ -24,8 +25,8 @@ export class SqlTableColumn extends PersistentObject<ISqlTableColumn> {
 
     getDesignerFormat(): IObjectDesignerFormat {
         let ret = super.getDesignerFormat();
-        ret.attributes.push({attrName: "name", title: "имя колонки", editor: {editorClass: STRING_EDITOR}});
-        ret.attributes.push({attrName: "description", title: "описание", editor: {editorClass: STRING_EDITOR}});
+        ret.attributes.push({attrName: "name", title: "имя колонки", _class: StringAttrEditor.getClassName()});
+        ret.attributes.push({attrName: "description", title: "описание", _class: StringAttrEditor.getClassName()});
         return ret;
     }
 
