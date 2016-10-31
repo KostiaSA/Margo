@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom";
 import {Layout} from "../ui/Layout";
 import {IPersistentObject} from "../schema/SchemaObject";
 import {ObjectPropertEditor} from "./ObjectPropertyEditor";
+import {SqlTableColumn} from "../schema/SqlTable/SqlTableColumn";
 
 export interface IObjectDesignerProps {
     editedObject: IPersistentObject;
@@ -13,10 +14,16 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
         super(props, context);
         this.props = props;
         this.context = context;
+        this.selectedObject = this.props.editedObject;
     }
 
+
+    selectedObject: IPersistentObject;
+    propertyEditorInstance: React.Component<any,any>;
+
     renderPropertyEditor(): JSX.Element {
-        return <ObjectPropertEditor editedObject={this.props.editedObject}></ObjectPropertEditor>;
+        return <ObjectPropertEditor ref={(e)=>this.propertyEditorInstance=e}
+                                    editedObject={this.selectedObject}></ObjectPropertEditor>;
     }
 
 
@@ -38,10 +45,18 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     peInstance: any;
 
     createTreeData(): any[] {
+        let fakeTable = SqlTableColumn.createNew();
+
         let root = [{
             "id": 1,
             "text": this.props.editedObject._class,
             "state": "opened",
+            "obj": this.props.editedObject
+        }, {
+            "id": 2,
+            "text": fakeTable._class,
+            "state": "opened",
+            "obj": fakeTable
         }];
         return root;
     }
@@ -50,7 +65,12 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     componentDidMount() {
 
         let treeOptions = {
-            data:this.createTreeData()
+            data: this.createTreeData(),
+            onSelect: (node: any)=> {
+                console.log(node);
+                this.selectedObject = node.obj;
+                this.propertyEditorInstance.forceUpdate();
+            }
             // data: [{
             //     "id": 1,
             //     "text": "Node 1",
