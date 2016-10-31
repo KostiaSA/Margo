@@ -1,10 +1,11 @@
 import {IAttrEditor, AttrEditor} from "./AttrEditor";
+import {IPersistentObject} from "../../schema/SchemaObject";
 
 export interface IDateTimeAttrEditor extends IAttrEditor {
 
 }
 
-export class DateTimeAttrEditor extends AttrEditor{
+export class DateTimeAttrEditor extends AttrEditor<IDateTimeAttrEditor>{
 
     static getClassName(): string {
         return "buhta.DateTimeAttrEditor";
@@ -20,7 +21,7 @@ export class DateTimeAttrEditor extends AttrEditor{
         } as IAttrEditor;
     }
 
-    getEasyEditor(): string {
+    getEasyEditor(editedObj: IPersistentObject): string {
         return "datetimebox";
     }
 

@@ -73,7 +73,6 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
                     state: "opened",
                     obj: obj[item.attrName],
                     children:obj[item.attrName].map((_item:any)=>{
-                        console.log("колнка",_item);
                         return this.createTreeData(_item);
                     },this)
                 };

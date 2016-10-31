@@ -11,7 +11,7 @@ export function registerClass(_class: Function) {
 
 
     objectClasses[className] = _class;
-    console.log(`register class "${className}"`);
+   // console.log(`register class "${className}"`);
 }
 
 

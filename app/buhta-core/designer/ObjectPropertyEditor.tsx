@@ -15,7 +15,7 @@ interface IEasyPropertyGridRow {
     value: any,
     group?: string,
     editor: string,
-    _editorInstance: AttrEditor,  // наша добавка
+    _editorInstance: AttrEditor<IAttrEditor>,  // наша добавка
 }
 
 
@@ -54,13 +54,13 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
             if (!editorHandler)
                 throw `attr editor class "${item._class}" is not registered`;
 
-            let editorInstance = getObjectInstanceOfType(editorHandler, [item]) as AttrEditor;
+            let editorInstance = getObjectInstanceOfType(editorHandler, [item]) as AttrEditor<IAttrEditor>;
 
             let row: IEasyPropertyGridRow = {
                 name: item.title || item.attrName,
-                value: obj[item.attrName],
+                value:  editorInstance.getAttrValue(obj),
                 group: item.editorGroup,
-                editor: editorInstance.getEasyEditor(),
+                editor: editorInstance.getEasyEditor(obj),
                 _editorInstance: editorInstance,
             };
             ret.push(row);
@@ -93,7 +93,6 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
             },
             onEndEdit: (index: number, row: IEasyPropertyGridRow) => {
                 row._editorInstance.setAttrValue(this.editedObject, row.value);
-                //console.log(row);
             }
         };
 

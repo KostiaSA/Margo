@@ -1,10 +1,11 @@
 import {IAttrEditor, AttrEditor} from "./AttrEditor";
+import {IPersistentObject} from "../../schema/SchemaObject";
 
 export interface IStringAttrEditor extends IAttrEditor {
     maxLen?: number;
 }
 
-export class StringAttrEditor extends AttrEditor{
+export class StringAttrEditor extends AttrEditor<IStringAttrEditor>{
 
     static getClassName(): string {
         return "buhta.StringAttrEditor";
@@ -20,7 +21,7 @@ export class StringAttrEditor extends AttrEditor{
         } as IAttrEditor;
     }
 
-    getEasyEditor(): string {
+    getEasyEditor(editedObj: IPersistentObject): string {
         return "text";
     }
 

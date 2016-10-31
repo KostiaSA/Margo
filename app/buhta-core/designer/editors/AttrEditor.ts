@@ -8,11 +8,11 @@ export interface IAttrEditor extends IPersistentObject {
     isReadonly?: boolean;
 }
 
-export class AttrEditor {
-    constructor(public edt: IAttrEditor) {
+export class AttrEditor<T extends IAttrEditor> {
+    constructor(public edt: T) {
     }
 
-    getEasyEditor(): string {
+    getEasyEditor(editedObj: IPersistentObject): any {
         throw "abstract error";
     }
 
@@ -20,10 +20,12 @@ export class AttrEditor {
         return this.edt.title || this.edt.attrName;
     }
 
-    setAttrValue(editedObj: IPersistentObject, value: any) {
+    getAttrValue(editedObj: IPersistentObject):any {
+        return  editedObj[this.edt.attrName] ;
+    }
 
+    setAttrValue(editedObj: IPersistentObject, value: any) {
         editedObj[this.edt.attrName] = value;
-        //console.log("setAttrValue",value,editedObj);
     }
 
     getIsReadonly(): boolean {
