@@ -3,19 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Hello World!</title>
+    <link rel="stylesheet" type="text/css" href="css/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
+    <style>
+        .icon-filter{
+            background:url('js/filter.png') no-repeat center center;
+        }
 
-    <link href="./node_modules/font-awesome/css/font-awesome.css" rel="stylesheet">
-    <link href="./node_modules/bulma/css/bulma.css" rel="stylesheet">
-    <link href="./node_modules/react-grid-layout/css/styles.css" rel="stylesheet">
-    <link href="./node_modules/react-resizable/css/styles.css" rel="stylesheet">
-    <link href="./node_modules/jquery.fancytree/dist/skin-win8/ui.fancytree.css" rel="stylesheet">
+        body {
+            font-family:verdana,helvetica,arial,sans-serif;
+            font-size:12px;
+            margin:0;
+        }
+    </style>
+
+    <!--<link href="./node_modules/font-awesome/css/font-awesome.css" rel="stylesheet">-->
+    <!--<link href="./node_modules/bulma/css/bulma.css" rel="stylesheet">-->
+    <!--<link href="./node_modules/react-grid-layout/css/styles.css" rel="stylesheet">-->
+    <!--<link href="./node_modules/react-resizable/css/styles.css" rel="stylesheet">-->
+    <!--<link href="./node_modules/jquery.fancytree/dist/skin-win8/ui.fancytree.css" rel="stylesheet">-->
 
 
     <!--<link rel="stylesheet" href="content/style.css" />-->
-    <link href="./node_modules/syncfusion-javascript/Content/ej/web/ej.widgets.core.min.css" rel="stylesheet" />
-    <link href="./node_modules/syncfusion-javascript/Content/ej/web/default-theme/ej.theme.min.css" rel="stylesheet" />
-    <link href="./node_modules/syncfusion-javascript/Content/ej/web/responsive-css/ej.responsive.css" rel="stylesheet" />
-    <link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!--<link href="./node_modules/syncfusion-javascript/Content/ej/web/ej.widgets.core.min.css" rel="stylesheet"/>-->
+    <!--<link href="./node_modules/syncfusion-javascript/Content/ej/web/default-theme/ej.theme.min.css" rel="stylesheet"/>-->
+    <!--<link href="./node_modules/syncfusion-javascript/Content/ej/web/responsive-css/ej.responsive.css" rel="stylesheet"/>-->
+    <!--<link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>-->
 
     <link href="./app.css" rel="stylesheet">
 
@@ -25,29 +38,27 @@
     <!--<script src="bower_components/jquery.fancytree/dist/jquery.fancytree-all.min.js"></script>-->
     <!--<script>if (window.module) module = window.module;</script>-->
 
+
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <!--<script>window["$"]=JQuery</script>-->
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.easyui.min.js"></script>
+    <script src="js/datagrid-filter.js"></script>
+
+
+
+
+
+    <!--<script src="js/syncfusion/external/jsrender.min.js"></script>-->
+    <!--<script src="js/syncfusion/scripts/web/ej.web.all.js"></script>-->
 </head>
 <body>
 <div id="container">
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using node
-    <script>document.write(process.versions.node)</script>
-    ,
-    Chromium
-    <script>document.write(process.versions.chrome)</script>
-    ,
-    and Electron
-    <script>document.write(process.versions.electron)</script>
-    .
 </div>
 </body>
 
-
 <script>
-// You can also require other files to run in this process
-    window.$ = window.jQuery = require('jquery')
-    require("jqueryui");
-    require("syncfusion-javascript/Scripts/ej/web/ej.web.all.min.js");
     require('./app/appstart.js');
 </script>
 </html>

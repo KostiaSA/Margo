@@ -3,28 +3,35 @@ import {ISchemaObject, PersistentObject, SchemaObject} from "../SchemaObject";
 
 import {getObjectClassInstance} from "../Schema";
 import {getRandomString} from "../../utils/getRandomString";
+import {IObjectDesignerFormat, STRING_EDITOR} from "../../designer/ObjectDesignerFormat";
 
 export interface ISqlTable extends ISchemaObject {
+    sqlName?: string;
     columns: ISqlTableColumn[];
     //indexes: SchemaTableIndex[] = [];
 }
 
 export class SqlTable extends SchemaObject<ISqlTable> {
 
-    //get columns():
 
-    static getClassName():string{
+    static getClassName(): string {
         return "buhta.SqlTable";
     }
 
     static createNew(): ISqlTable {
         return {
             _class: this.getClassName(),
-            name: "Новая таблица",
+            name: "НоваяТаблица",
             columns: [],
             createDate: new Date(),
             createUserID: getRandomString()
         } as ISqlTable;
+    }
+
+    getDesignerFormat(): IObjectDesignerFormat {
+        let ret = super.getDesignerFormat();
+        ret.attributes.push({attrName: "sqlName", title: "имя таблицы", editor: {editorClass: STRING_EDITOR}});
+        return ret;
     }
 
     prepareToSave() {

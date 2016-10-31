@@ -1,9 +1,11 @@
-
 import {objectClasses} from "../objectClasses";
+import {IObjectDesignerFormat, STRING_EDITOR} from "../designer/ObjectDesignerFormat";
 
 export interface IPersistentObject {
     _class: string;
+    [id: string]: any;
 }
+
 
 export interface ISchemaObject extends IPersistentObject {
 
@@ -77,6 +79,12 @@ export class PersistentObject<T extends IPersistentObject> {
     prepareToSave() {
         throw "abstract error";
     }
+
+    getDesignerFormat(): IObjectDesignerFormat {
+        return {
+            attributes: []
+        };
+    }
 }
 
 export class SchemaObject<T extends ISchemaObject> extends PersistentObject<T> {
@@ -88,8 +96,15 @@ export class SchemaObject<T extends ISchemaObject> extends PersistentObject<T> {
     prepareToSave() {
         throw "abstract error";
     }
-}
 
+    getDesignerFormat(): IObjectDesignerFormat {
+        let ret = super.getDesignerFormat();
+        ret.attributes.push({attrName: "name", title: "имя", editor: {editorClass: STRING_EDITOR}});
+        ret.attributes.push({attrName: "description", title: "описание", editor: {editorClass: STRING_EDITOR}});
+        return ret;
+    }
+
+}
 
 
 // export function newSchemaObjectId(): SchemaObjectId {
