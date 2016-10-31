@@ -1,9 +1,12 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {Layout} from "../ui/Layout";
-import {IPersistentObject} from "../schema/SchemaObject";
+import {IPersistentObject, PersistentObject} from "../schema/SchemaObject";
 import {ObjectPropertEditor} from "./ObjectPropertyEditor";
 import {SqlTableColumn} from "../schema/SqlTable/SqlTableColumn";
+import {objectClasses} from "../objectClasses";
+import {getObjectInstanceOfType} from "../utils/getObjectInstanceOfType";
+import {IArrayAttrEditor, ArrayAttrEditor} from "./editors/ArrayAttrEditor";
 
 export interface IObjectDesignerProps {
     editedObject: IPersistentObject;
@@ -44,20 +47,39 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     peContainer: any;
     peInstance: any;
 
-    createTreeData(): any[] {
-        let fakeTable = SqlTableColumn.createNew();
+    createTreeData(obj:IPersistentObject): any {
 
-        let root = [{
-            "id": 1,
-            "text": this.props.editedObject._class,
-            "state": "opened",
-            "obj": this.props.editedObject
-        }, {
-            "id": 2,
-            "text": fakeTable._class,
-            "state": "opened",
-            "obj": fakeTable
-        }];
+        let objHandler = objectClasses[obj._class];
+        if (!objHandler)
+            throw `object class "${obj._class}" is not registered`;
+
+        let objInstance = getObjectInstanceOfType(objHandler, [obj]) as PersistentObject<IPersistentObject>;
+        let designerFormat = objInstance.getDesignerFormat();
+
+        let root={
+            //id: 1,
+            text: designerFormat.getTitle(obj),
+            state: "opened",
+            obj: obj,
+            children:designerFormat.arrays.map((item:IArrayAttrEditor)=>{
+
+                let itemHandler = objectClasses[item._class];
+                if (!itemHandler)
+                    throw `object class "${item._class}" is not registered`;
+                let itemInstance = getObjectInstanceOfType(itemHandler, [item]) as ArrayAttrEditor;
+
+                let ret={
+                    text: itemInstance.getTitle(),
+                    state: "opened",
+                    obj: obj[item.attrName],
+                    children:obj[item.attrName].map((_item:any)=>{
+                        console.log("колнка",_item);
+                        return this.createTreeData(_item);
+                    },this)
+                };
+                return ret;
+            },this)
+        };
         return root;
     }
 
@@ -65,7 +87,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     componentDidMount() {
 
         let treeOptions = {
-            data: this.createTreeData(),
+            data: [this.createTreeData(this.props.editedObject)],
             onSelect: (node: any)=> {
                 this.selectedObject = node.obj;
                 this.propertyEditorInstance.setEditedObject(this.selectedObject);

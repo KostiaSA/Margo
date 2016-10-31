@@ -19,7 +19,7 @@ export class SqlTableColumn extends PersistentObject<ISqlTableColumn> {
     static createNew(): ISqlTableColumn {
         return {
             _class: this.getClassName(),
-            name:"Новая колока",
+            name:"НоваяКолонка",
         } as ISqlTableColumn;
     }
 
@@ -27,6 +27,9 @@ export class SqlTableColumn extends PersistentObject<ISqlTableColumn> {
         let ret = super.getDesignerFormat();
         ret.attributes.push({attrName: "name", title: "имя колонки", _class: StringAttrEditor.getClassName()});
         ret.attributes.push({attrName: "description", title: "описание", _class: StringAttrEditor.getClassName()});
+        ret.getTitle=(obj:ISqlTableColumn)=>{
+            return obj.name;
+        };
         return ret;
     }
 

@@ -1,4 +1,6 @@
 import {IAttrEditor} from "./editors/AttrEditor";
+import {IPersistentObject} from "../schema/SchemaObject";
+import {IArrayAttrEditor} from "./editors/ArrayAttrEditor";
 
 
 // export const NUMBER_EDITOR = "number";
@@ -20,4 +22,6 @@ import {IAttrEditor} from "./editors/AttrEditor";
 
 export interface IObjectDesignerFormat {
     attributes: IAttrEditor[];
+    arrays: IArrayAttrEditor[];
+    getTitle:(obj:IPersistentObject)=>string;
 }

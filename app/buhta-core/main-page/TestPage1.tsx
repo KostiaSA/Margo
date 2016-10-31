@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom";
 import {Layout} from "../ui/Layout";
 import {ObjectDesigner, IObjectDesignerProps} from "../designer/ObjectDesigner";
 import {ISqlTable, SqlTable} from "../schema/SqlTable/SqlTable";
+import {SqlTableColumn} from "../schema/SqlTable/SqlTableColumn";
 
 
 export class TestPage1 extends React.Component<any,any> {
@@ -17,6 +18,12 @@ export class TestPage1 extends React.Component<any,any> {
 
 
         let table= SqlTable.createNew();
+        let col=SqlTableColumn.createNew();
+        col.name="Номер";
+        let col2=SqlTableColumn.createNew();
+        col2.name="Название";
+        table.columns.push(col);
+        table.columns.push(col2);
 
         let designerProps: IObjectDesignerProps = {
             editedObject: table

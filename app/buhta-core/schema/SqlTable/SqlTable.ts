@@ -5,6 +5,7 @@ import {getObjectClassInstance} from "../Schema";
 import {getRandomString} from "../../utils/getRandomString";
 import {IObjectDesignerFormat} from "../../designer/ObjectDesignerFormat";
 import {StringAttrEditor} from "../../designer/editors/StringAttrEditor";
+import {ArrayAttrEditor} from "../../designer/editors/ArrayAttrEditor";
 
 export interface ISqlTable extends ISchemaObject {
     sqlName?: string;
@@ -32,6 +33,12 @@ export class SqlTable extends SchemaObject<ISqlTable> {
     getDesignerFormat(): IObjectDesignerFormat {
         let ret = super.getDesignerFormat();
         ret.attributes.push({attrName: "sqlName", title: "имя таблицы", _class: StringAttrEditor.getClassName()});
+        ret.arrays.push({attrName: "columns", title: "колонки", _class: ArrayAttrEditor.getClassName()});
+
+        ret.getTitle = (obj: ISqlTableColumn)=> {
+            return obj.name + "  (таблица)";
+        };
+
         return ret;
     }
 

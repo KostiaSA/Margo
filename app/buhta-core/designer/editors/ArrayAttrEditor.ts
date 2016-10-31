@@ -1,25 +1,28 @@
-import {IAttrEditor, AttrEditor} from "./AttrEditor";
 
-export interface IArrayAttrEditor extends IAttrEditor {
-    maxLen?: number;
+import {IPersistentObject} from "../../schema/SchemaObject";
+
+export interface IArrayAttrEditor extends IPersistentObject {
+    attrName: string;
+    title?: string;
 }
 
-export class ArrayAttrEditor extends AttrEditor {
+export class ArrayAttrEditor {
+    constructor(public edt: IArrayAttrEditor) {
+    }
 
     static getClassName(): string {
         return "buhta.ArrayAttrEditor";
     }
 
-    static createNew(): IAttrEditor {
+    static createNew(): IArrayAttrEditor {
         return {
             _class: this.getClassName(),
-        } as IAttrEditor;
+        } as IArrayAttrEditor;
     }
 
-    getEasyEditor(): string {
-        return "text";
+    getTitle(): string {
+        return this.edt.title || this.edt.attrName;
     }
-
-
 
 }
+

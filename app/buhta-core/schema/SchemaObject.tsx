@@ -84,7 +84,11 @@ export class PersistentObject<T extends IPersistentObject> {
 
     getDesignerFormat(): IObjectDesignerFormat {
         return {
-            attributes: []
+            attributes: [],
+            arrays: [],
+            getTitle: (obj: IPersistentObject)=> {
+                return obj._class
+            }
         };
     }
 }
@@ -101,9 +105,14 @@ export class SchemaObject<T extends ISchemaObject> extends PersistentObject<T> {
 
     getDesignerFormat(): IObjectDesignerFormat {
         let ret = super.getDesignerFormat();
-        ret.attributes.push({ _class: StringAttrEditor.getClassName(),attrName: "name", title: "имя"});
-        ret.attributes.push({ _class: StringAttrEditor.getClassName(),attrName: "description", title: "описание"});
-        ret.attributes.push({ _class: DateTimeAttrEditor.getClassName(),attrName: "createDate", title: "когда создан", isReadonly:true});
+        ret.attributes.push({_class: StringAttrEditor.getClassName(), attrName: "name", title: "имя"});
+        ret.attributes.push({_class: StringAttrEditor.getClassName(), attrName: "description", title: "описание"});
+        ret.attributes.push({
+            _class: DateTimeAttrEditor.getClassName(),
+            attrName: "createDate",
+            title: "когда создан",
+            isReadonly: true
+        });
         return ret;
     }
 
