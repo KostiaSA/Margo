@@ -20,6 +20,10 @@ export class SqlTable extends SchemaObject<ISqlTable> {
         return "buhta.SqlTable";
     }
 
+    // static getParentClassName():string{
+    //     return "buhta.SchemaObject";
+    // }
+
     static createNew(): ISqlTable {
         return {
             _class: this.getClassName(),

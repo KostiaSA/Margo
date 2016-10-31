@@ -4,6 +4,9 @@ import {Layout} from "../ui/Layout";
 import {ObjectDesigner, IObjectDesignerProps} from "../designer/ObjectDesigner";
 import {ISqlTable, SqlTable} from "../schema/SqlTable/SqlTable";
 import {SqlTableColumn} from "../schema/SqlTable/SqlTableColumn";
+import {SchemaObject} from "../schema/SchemaObject";
+import {SqlStringDataType} from "../schema/SqlTable/SqlStringDataType";
+import {SqlDataType} from "../schema/SqlTable/SqlDataType";
 
 
 export class TestPage1 extends React.Component<any,any> {
@@ -15,6 +18,8 @@ export class TestPage1 extends React.Component<any,any> {
 
 
     render(): JSX.Element {
+
+      //   console.log("прото1", SqlStringDataType.prototype instanceof SqlDataType);
 
 
         let table= SqlTable.createNew();

@@ -1,10 +1,35 @@
 import {IPersistentObject, PersistentObject} from "../SchemaObject";
+import {IObjectDesignerFormat} from "../../designer/ObjectDesignerFormat";
 
 export interface ISqlDataType extends IPersistentObject {
 
 }
 
-export class SqlDataTypeHandler<T extends ISqlDataType> extends PersistentObject<T> {
+export class SqlDataType<T extends ISqlDataType> extends PersistentObject<T> {
+
+    // static getClassName():string{
+    //     throw  "abstract error";
+    //     //return "buhta.SqlDataType";
+    // }
+    //
+    // static createNew(): T {
+    //     throw  "abstract error";
+    //     // return {
+    //     //     _class: this.getClassName(),
+    //     //     name:"НоваяКолонка",
+    //     // } as ISqlTableColumn;
+    // }
+
+    getDesignerFormat(): IObjectDesignerFormat {
+        let ret = super.getDesignerFormat();
+        //ret.attributes.push({attrName: "name", title: "имя колонки", _class: StringAttrEditor.getClassName()});
+        //ret.attributes.push({attrName: "description", title: "описание", _class: StringAttrEditor.getClassName()});
+        ret.getTitle=(obj:ISqlDataType)=>{
+            throw  "abstract error";
+            //return obj.name;
+        };
+        return ret;
+    }
 
     // validate(errors: string[]) {
     //     let errTitle = "Ошибка в колонке '" + this.obj.name + "': ";

@@ -1,13 +1,13 @@
 import {IAttrEditor, AttrEditor} from "./AttrEditor";
 
-export interface IStringAttrEditor extends IAttrEditor {
-    maxLen?: number;
+export interface IObjectAttrEditor extends IAttrEditor {
+    getObjectClassesList(): Function[];
 }
 
-export class StringAttrEditor extends AttrEditor{
+export class ObjectAttrEditor extends AttrEditor {
 
     static getClassName(): string {
-        return "buhta.StringAttrEditor";
+        return "buhta.ObjectAttrEditor";
     }
 
     // static getParentClassName():string{
@@ -21,8 +21,11 @@ export class StringAttrEditor extends AttrEditor{
     }
 
     getEasyEditor(): string {
-        return "text";
+        return "combobox";
     }
 
+    getObjectClassesList(): Function[] {
+        return [];
+    }
 
 }

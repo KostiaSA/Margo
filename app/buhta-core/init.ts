@@ -5,6 +5,7 @@ import {SqlStringDataType} from "./schema/SqlTable/SqlStringDataType";
 import {StringAttrEditor} from "./designer/editors/StringAttrEditor";
 import {DateTimeAttrEditor} from "./designer/editors/DateTimeAttrEditor";
 import {ArrayAttrEditor} from "./designer/editors/ArrayAttrEditor";
+import {ObjectAttrEditor} from "./designer/editors/ObjectAttrEditor";
 
 export function init(){
     registerClass(SqlTable);
@@ -14,4 +15,5 @@ export function init(){
     registerClass(StringAttrEditor);
     registerClass(DateTimeAttrEditor);
     registerClass(ArrayAttrEditor);
+    registerClass(ObjectAttrEditor);
 }

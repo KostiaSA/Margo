@@ -14,6 +14,7 @@ export class ArrayAttrEditor {
         return "buhta.ArrayAttrEditor";
     }
 
+
     static createNew(): IArrayAttrEditor {
         return {
             _class: this.getClassName(),

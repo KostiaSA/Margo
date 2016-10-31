@@ -10,6 +10,10 @@ export class DateTimeAttrEditor extends AttrEditor{
         return "buhta.DateTimeAttrEditor";
     }
 
+    // static getParentClassName():string{
+    //     return "buhta.AttrEditor";
+    // }
+
     static createNew(): IAttrEditor {
         return {
             _class: this.getClassName(),
