@@ -16,10 +16,6 @@ export class ObjectAttrEditor extends AttrEditor<IObjectAttrEditor> {
         return "buhta.ObjectAttrEditor";
     }
 
-    // static getParentClassName():string{
-    //     return "buhta.AttrEditor";
-    // }
-
     static createNew(): IAttrEditor {
         return {
             _class: this.getClassName(),
@@ -52,7 +48,6 @@ export class ObjectAttrEditor extends AttrEditor<IObjectAttrEditor> {
             formatter = (value: any, row: IEasyPropertyGridRow)=> {
 //                console.log("eee",row.valueObj);
                 return (getObjectHandlerOf(row.valueObj) as any).getClassTitle();
-                ;
             };
         }
         return formatter;

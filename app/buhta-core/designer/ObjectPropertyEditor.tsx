@@ -8,6 +8,7 @@ import {AttrEditor} from "./editors/AttrEditor";
 
 export interface IObjectPropertEditorProps {
     editedObject: IPersistentObject;
+    onChange?: ()=>void;
 }
 
 export interface IAttrFormatter {
@@ -84,7 +85,7 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
                 editorInstance: editorInstance,
                 formatter: editorInstance.getFormatter(),
                 valueObj: obj[item.attrName],
-                editedObj:obj
+                editedObj: obj
             };
             ret.push(row);
 
@@ -130,6 +131,8 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
             row.editorInstance.setAttrValue(row.editedObj, row.value, row);
             if (row.editorInstance.getIsNeedReloadPropertyEditor())
                 this.loadEditors();
+            if (this.props.onChange)
+                this.props.onChange();
             //row.valueObj=this.editedObject
         };
         peOptions.columns[0][1].formatter = (value: any, row: IEasyPropertyGridRow) => {
@@ -142,7 +145,7 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
 
         window.setTimeout(()=> {
             this.peInstance = ($(this.peContainer) as any).propertygrid(peOptions);
-            console.log(($(this.peContainer) as any).propertygrid("options").columns[0][1]);
+            //console.log(($(this.peContainer) as any).propertygrid("options").columns[0][1]);
         }, 1);
 
     };

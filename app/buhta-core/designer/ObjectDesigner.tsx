@@ -24,11 +24,32 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     selectedObject: IPersistentObject;
     propertyEditorInstance: ObjectPropertEditor;
 
-    renderPropertyEditor(): JSX.Element {
-        return <ObjectPropertEditor ref={(e)=>this.propertyEditorInstance=e}
-                                    editedObject={this.selectedObject}></ObjectPropertEditor>;
+    handleObjectChange = ()=> {
+        this.reloadSelectedNode();
     }
 
+    renderPropertyEditor(): JSX.Element {
+        return (
+            <ObjectPropertEditor
+                ref={(e)=>this.propertyEditorInstance=e}
+                editedObject={this.selectedObject}
+                onChange={this.handleObjectChange}
+            >
+
+            </ObjectPropertEditor>);
+    }
+
+
+    easyTree = (arg1: any, arg2?: any): any=> {
+        return ($(this.treeContainer) as any).tree(arg1, arg2);
+    }
+
+    reloadSelectedNode() {
+        var node = this.easyTree("getSelected");
+        let newNode = this.createTreeData(node.obj, node.id);
+        node.text=newNode.text;
+        this.easyTree("update", node);
+    }
 
     render(): JSX.Element {
 
@@ -43,11 +64,10 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     }
 
     treeContainer: any;
-    treeInstance: any;
     peContainer: any;
     peInstance: any;
 
-    createTreeData(obj:IPersistentObject): any {
+    createTreeData(obj: IPersistentObject, id: string): any {
 
         let objHandler = objectClasses[obj._class];
         if (!objHandler)
@@ -56,28 +76,29 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
         let objInstance = getObjectInstanceOfType(objHandler, [obj]) as PersistentObject<IPersistentObject>;
         let designerFormat = objInstance.getDesignerFormat();
 
-        let root={
-            //id: 1,
+        let root = {
+            id: id,
             text: designerFormat.getTitle(obj),
             state: "opened",
             obj: obj,
-            children:designerFormat.arrays.map((item:IArrayAttrEditor)=>{
-
+            children: designerFormat.arrays.map((item: IArrayAttrEditor, index: number)=> {
+                let itemId = id + ":" + item.attrName;
                 let itemHandler = objectClasses[item._class];
                 if (!itemHandler)
                     throw `object class "${item._class}" is not registered`;
                 let itemInstance = getObjectInstanceOfType(itemHandler, [item]) as ArrayAttrEditor;
 
-                let ret={
+                let ret = {
+                    id: itemId,
                     text: itemInstance.getTitle(),
                     state: "opened",
                     obj: obj[item.attrName],
-                    children:obj[item.attrName].map((_item:any)=>{
-                        return this.createTreeData(_item);
-                    },this)
+                    children: obj[item.attrName].map((_item: any, index: number)=> {
+                        return this.createTreeData(_item, itemId + ":" + index.toString());
+                    }, this)
                 };
                 return ret;
-            },this)
+            }, this)
         };
         return root;
     }
@@ -86,31 +107,15 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     componentDidMount() {
 
         let treeOptions = {
-            data: [this.createTreeData(this.props.editedObject)],
+            data: [this.createTreeData(this.props.editedObject, "root")],
             onSelect: (node: any)=> {
                 this.selectedObject = node.obj;
                 this.propertyEditorInstance.setEditedObject(this.selectedObject);
             }
-            // data: [{
-            //     "id": 1,
-            //     "text": "Node 1",
-            //     "state": "closed",
-            //     "children": [{
-            //         "id": 11,
-            //         "text": "Node 11"
-            //     }, {
-            //         "id": 12,
-            //         "text": "Node 12"
-            //     }]
-            // }, {
-            //     "id": 2,
-            //     "text": "Node 2",
-            //     "state": "closed"
-            // }]
         };
 
         window.setTimeout(()=> {
-            this.treeInstance = ($(this.treeContainer) as any).tree(treeOptions);
+            this.easyTree(treeOptions);
         }, 1);
 
     };
