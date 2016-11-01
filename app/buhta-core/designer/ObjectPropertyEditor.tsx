@@ -36,6 +36,7 @@ export interface IEasyPropertyGridRow {
 }
 
 
+
 export class ObjectPropertEditor extends React.Component<IObjectPropertEditorProps,any> {
     constructor(props: any, context: any) {
         super(props, context);

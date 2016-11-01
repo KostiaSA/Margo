@@ -5,7 +5,8 @@ import {getObjectClassInstance} from "../Schema";
 import {getRandomString} from "../../utils/getRandomString";
 import {IObjectDesignerFormat} from "../../designer/ObjectDesignerFormat";
 import {StringAttrEditor} from "../../designer/editors/StringAttrEditor";
-import {ArrayAttrEditor} from "../../designer/editors/ArrayAttrEditor";
+import {ArrayAttrEditor, IArrayAttrEditor} from "../../designer/editors/ArrayAttrEditor";
+import {Action} from "../../designer/Action";
 
 export interface ISqlTable extends ISchemaObject {
     sqlName?: string;
@@ -37,7 +38,20 @@ export class SqlTable extends SchemaObject<ISqlTable> {
     getDesignerFormat(): IObjectDesignerFormat {
         let ret = super.getDesignerFormat();
         ret.attributes.push({attrName: "sqlName", title: "имя таблицы", _class: StringAttrEditor.getClassName()});
-        ret.arrays.push({attrName: "columns", title: "колонки", _class: ArrayAttrEditor.getClassName()});
+
+        let columnsEditor: IArrayAttrEditor = {
+            attrName: "columns",
+            title: "колонки",
+            _class: ArrayAttrEditor.getClassName(),
+            actions:[
+                {_class:Action.getClassName(), text:"новая колонка", onClick:()=>{
+                    let newCol=SqlTableColumn.createNew();
+                    this.obj.columns.push(newCol);
+                    return newCol;
+                }}
+            ]
+        };
+        ret.arrays.push(columnsEditor);
 
         ret.getTitle = (obj: ISqlTableColumn)=> {
             return obj.name + "  (таблица)";

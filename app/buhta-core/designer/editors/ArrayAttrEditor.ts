@@ -1,9 +1,10 @@
-
 import {IPersistentObject} from "../../schema/SchemaObject";
+import {IAction} from "../Action";
 
 export interface IArrayAttrEditor extends IPersistentObject {
     attrName: string;
     title?: string;
+    actions?: IAction[];
 }
 
 export class ArrayAttrEditor {
