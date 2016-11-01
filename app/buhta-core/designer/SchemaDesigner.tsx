@@ -2,45 +2,40 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {Layout} from "../ui/Layout";
 import {IPersistentObject, PersistentObject} from "../schema/SchemaObject";
-import {ObjectPropertEditor} from "./ObjectPropertyEditor";
 import {getObjectInstanceOfType} from "../utils/getObjectInstanceOfType";
 import {IArrayAttrEditor, ArrayAttrEditor} from "./editors/ArrayAttrEditor";
 import {IAction} from "./Action";
 import {getRandomString} from "../utils/getRandomString";
 import {objectClasses} from "../objectClasses";
 
-export interface IObjectDesignerProps {
-    editedObject: IPersistentObject;
+export interface ISchemaDesignerProps {
+  //  editedObject: IPersistentObject;
 }
 
 
 let myId = Symbol();
 
-export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
+export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
     constructor(props: any, context: any) {
         super(props, context);
         this.props = props;
         this.context = context;
-        this.selectedObject = this.props.editedObject;
+       // this.selectedObject = this.props.editedObject;
     }
 
 
     selectedObject: IPersistentObject;
-    propertyEditorInstance: ObjectPropertEditor;
+    tabsInstance: any;
 
     handleObjectChange = ()=> {
         this.reloadTreeSelectedNode();
     }
 
-    renderPropertyEditor(): JSX.Element {
+    renderTabs(): JSX.Element {
         return (
-            <ObjectPropertEditor
-                ref={(e)=>this.propertyEditorInstance=e}
-                editedObject={this.selectedObject}
-                onChange={this.handleObjectChange}
-            >
-
-            </ObjectPropertEditor>);
+            <div>
+                это табс
+            </div>);
     }
 
 
@@ -56,19 +51,19 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     }
 
     reloadTree(idToSetFocus?: string) {
-        this.easyTree("loadData", [this.createTreeData(this.props.editedObject, "root")]);
-        if (idToSetFocus) {
-            var nodeToFocus = this.easyTree("find", idToSetFocus);
-            this.easyTree("select", nodeToFocus.target);
-        }
+        // this.easyTree("loadData", [this.createTreeData(this.props.editedObject, "root")]);
+        // if (idToSetFocus) {
+        //     var nodeToFocus = this.easyTree("find", idToSetFocus);
+        //     this.easyTree("select", nodeToFocus.target);
+        // }
     }
 
     render(): JSX.Element {
 
         return (
             <Layout _class="Layout" fit={true} panels={[
-                            {_class:"LayoutPanel", title:"Состав объекта", region:"west",split:true, width:350, content:this.renderTree()},
-                            {_class:"LayoutPanel", title:"center", region:"center",content:this.renderPropertyEditor()},
+                            {_class:"LayoutPanel", title:"Схема приложения", region:"west",split:true, width:450, content:this.renderTree()},
+                            {_class:"LayoutPanel", title:"табсы", region:"center",content:this.renderTabs()},
             ]}/>
         )
 
@@ -131,7 +126,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
           //  data: здесь не заполнять !!!
             onSelect: (node: any)=> {
                 this.selectedObject = node.obj;
-                this.propertyEditorInstance.setEditedObject(this.selectedObject);
+                this.tabsInstance.setEditedObject(this.selectedObject);
             },
             onContextMenu: (e: any, node: any) => {
                 e.preventDefault();
@@ -193,7 +188,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
 
         window.setTimeout(()=> {
             this.easyTree(treeOptions);
-            this.easyTree("loadData", [this.createTreeData(this.props.editedObject, "root")]);
+            //this.easyTree("loadData", [this.createTreeData(this.props.editedObject, "root")]);
         }, 1);
 
     };

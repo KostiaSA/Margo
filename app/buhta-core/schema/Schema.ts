@@ -115,7 +115,7 @@ export function getObjectClassInstance<T extends PersistentObject<IPersistentObj
 //                     console.log("load schema object from sql :" + id);
 //                     let select = new SelectStmt()
 //                         .table("SchemaObject")
-//                         .column("parentObjectID")
+//                         .column("parentObjectId")
 //                         .column("position")
 //                         .column("jsCode")
 //                         .where("id", "=", new SqlGuidValue(id));
@@ -133,7 +133,7 @@ export function getObjectClassInstance<T extends PersistentObject<IPersistentObj
 //                             delete this.objects_cache_is_loading[id];
 //
 //                             // эти два поля может менять грида при DragDrop
-//                             obj.parentObjectID = row["parentObjectID"];
+//                             obj.parentObjectId = row["parentObjectId"];
 //                             obj.position = row["position"];
 //
 //                             resolve(obj as T);
@@ -166,28 +166,28 @@ export function getObjectClassInstance<T extends PersistentObject<IPersistentObj
 //
 //     // нормализация на всякий случай
 //     objectToSave.id = objectToSave.id.toLowerCase();
-//     if (_.isString(objectToSave.parentObjectID))
-//         objectToSave.parentObjectID = objectToSave.parentObjectID.toLowerCase();
-//     if (_.isString(objectToSave.createUserID))
-//         objectToSave.createUserID = objectToSave.createUserID.toLowerCase();
-//     if (_.isString(objectToSave.changeUserID))
-//         objectToSave.changeUserID = objectToSave.changeUserID.toLowerCase();
-//     if (_.isString(objectToSave.lockedByUserID))
-//         objectToSave.lockedByUserID = objectToSave.lockedByUserID.toLowerCase();
+//     if (_.isString(objectToSave.parentObjectId))
+//         objectToSave.parentObjectId = objectToSave.parentObjectId.toLowerCase();
+//     if (_.isString(objectToSave.createUserId))
+//         objectToSave.createUserId = objectToSave.createUserId.toLowerCase();
+//     if (_.isString(objectToSave.changeUserId))
+//         objectToSave.changeUserId = objectToSave.changeUserId.toLowerCase();
+//     if (_.isString(objectToSave.lockedByUserId))
+//         objectToSave.lockedByUserId = objectToSave.lockedByUserId.toLowerCase();
 //
 //     let sql = new UpsertStmt("SchemaObject")
 //         .column("id", new SqlGuidValue(objectToSave.id))
-//         .column("parentObjectId", new SqlGuidValue(objectToSave.parentObjectID))
+//         .column("parentObjectId", new SqlGuidValue(objectToSave.parentObjectId))
 //         .column("name", new SqlStringValue(objectToSave.name))
 //         .column("description", new SqlStringValue(objectToSave.description))
 //         .column("typeId", new SqlGuidValue(objectToSave.getObjectTypeInfo().id))
 //         .column("typeName", new SqlStringValue(objectToSave.getObjectTypeInfo().name))
 //         .column("createDate", objectToSave.createDate)
-//         .column("createUserId", new SqlGuidValue(objectToSave.createUserID))
+//         .column("createUserId", new SqlGuidValue(objectToSave.createUserId))
 //         .column("changeDate", objectToSave.changeDate)
-//         .column("changeUserId", new SqlGuidValue(objectToSave.changeUserID))
+//         .column("changeUserId", new SqlGuidValue(objectToSave.changeUserId))
 //         .column("lockDateTime", objectToSave.lockDateTime)
-//         .column("lockedByUserId", new SqlGuidValue(objectToSave.lockedByUserID))
+//         .column("lockedByUserId", new SqlGuidValue(objectToSave.lockedByUserId))
 //         .column("jsCode", new SqlStringValue(objectToHostJavaScript(objectToSave)))
 //         .column("position", objectToSave.position)
 //         .where("id", "=", new SqlGuidValue(objectToSave.id));

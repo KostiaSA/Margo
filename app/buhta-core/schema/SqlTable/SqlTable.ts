@@ -31,7 +31,7 @@ export class SqlTable extends SchemaObject<ISqlTable> {
             name: "НоваяТаблица",
             columns: [],
             createDate: new Date(),
-            createUserID: getRandomString()
+            createUserId: getRandomString()
         } as ISqlTable;
     }
 

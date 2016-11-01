@@ -12,18 +12,18 @@ export interface IPersistentObject {
 export interface ISchemaObject extends IPersistentObject {
 
     _id?: string;
-    parentObjectID?: string;
+    parentObjectId?: string;
     name: string;
     description?: string;
 
     createDate: Date;
-    createUserID: string;
+    createUserId: string;
 
     changeDate?: Date;
-    changeUserID?: string;
+    changeUserId?: string;
 
     lockDateTime?: Date;
-    lockedByUserID?: string;
+    lockedByUserId?: string;
 
     position?: number;
 
