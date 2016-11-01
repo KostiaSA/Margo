@@ -20,7 +20,7 @@ export interface IAttrEditor extends IPersistentObject {
     //editor: IAttrEditor;
     editorGroup?: string;
     isReadonly?: boolean;
-    formatter?:IAttrFormatter;
+    formatter?: IAttrFormatter;
 }
 
 export interface IEasyPropertyGridRow {
@@ -30,7 +30,7 @@ export interface IEasyPropertyGridRow {
     editor: string;
     editorInstance: AttrEditor<IAttrEditor>;  // наша добавка
     formatter?: IAttrFormatter; // наша добавка
-    valueObj?: IPersistentObject,
+    valueObj: IPersistentObject,
 }
 
 
@@ -77,7 +77,8 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
                 group: item.editorGroup,
                 editor: editorInstance.getEasyEditor(obj),
                 editorInstance: editorInstance,
-                formatter: editorInstance.getFormatter()
+                formatter: editorInstance.getFormatter(),
+                valueObj: obj[item.attrName],
             };
             ret.push(row);
 
@@ -108,7 +109,8 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
             return !row.editorInstance.getIsReadonly();  // делаем cancel
         };
         peOptions.onEndEdit = (index: number, row: IEasyPropertyGridRow) => {
-            row.editorInstance.setAttrValue(this.editedObject, row.value);
+            row.editorInstance.setAttrValue(this.editedObject, row.value, row);
+            //row.valueObj=this.editedObject
         };
         peOptions.columns[0][1].formatter = (value: any, row: IEasyPropertyGridRow) => {
             if (row.formatter)

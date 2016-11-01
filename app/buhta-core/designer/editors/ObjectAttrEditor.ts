@@ -50,18 +50,20 @@ export class ObjectAttrEditor extends AttrEditor<IObjectAttrEditor> {
         let formatter = super.getFormatter();
         if (!formatter) {
             formatter = (value: any, row: IEasyPropertyGridRow)=> {
-                return "value"
+//                console.log("eee",row.valueObj);
+                return getObjectOf(row.valueObj).toString();
             };
         }
         return formatter;
     }
 
     getAttrValue(editedObj: IPersistentObject): any {
-        return getObjectOf(editedObj[this.edt.attrName]).toString();
+        return (getObjectHandlerOf(editedObj[this.edt.attrName]) as any).getClassTitle();
     }
 
-    setAttrValue(editedObj: IPersistentObject, value: any) {
+    setAttrValue(editedObj: IPersistentObject, value: any, row: IEasyPropertyGridRow) {
         editedObj[this.edt.attrName] = getObjectOfClassName(value);
+        row.valueObj = editedObj[this.edt.attrName];
     }
 
 }

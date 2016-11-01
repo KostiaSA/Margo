@@ -22,7 +22,7 @@ export class AttrEditor<T extends IAttrEditor> {
         return editedObj[this.edt.attrName];
     }
 
-    setAttrValue(editedObj: IPersistentObject, value: any) {
+    setAttrValue(editedObj: IPersistentObject, value: any, row:IEasyPropertyGridRow) {
         editedObj[this.edt.attrName] = value;
     }
 

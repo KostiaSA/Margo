@@ -6,11 +6,13 @@ import {StringAttrEditor} from "./designer/editors/StringAttrEditor";
 import {DateTimeAttrEditor} from "./designer/editors/DateTimeAttrEditor";
 import {ArrayAttrEditor} from "./designer/editors/ArrayAttrEditor";
 import {ObjectAttrEditor} from "./designer/editors/ObjectAttrEditor";
+import {SqlIntDataType} from "./schema/SqlTable/SqlIntDataType";
 
 export function init(){
     registerClass(SqlTable);
     registerClass(SqlTableColumn);
     registerClass(SqlStringDataType);
+    registerClass(SqlIntDataType);
 
     registerClass(StringAttrEditor);
     registerClass(DateTimeAttrEditor);
