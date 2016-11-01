@@ -51,7 +51,7 @@ export class ObjectAttrEditor extends AttrEditor<IObjectAttrEditor> {
         if (!formatter) {
             formatter = (value: any, row: IEasyPropertyGridRow)=> {
 //                console.log("eee",row.valueObj);
-                return getObjectOf(row.valueObj).toString();
+                return (getObjectHandlerOf(row.valueObj) as any).getClassTitle();;
             };
         }
         return formatter;
@@ -65,5 +65,10 @@ export class ObjectAttrEditor extends AttrEditor<IObjectAttrEditor> {
         editedObj[this.edt.attrName] = getObjectOfClassName(value);
         row.valueObj = editedObj[this.edt.attrName];
     }
+
+    getIsNeedReloadPropertyEditor(): boolean {
+        return true;
+    }
+
 
 }

@@ -30,6 +30,10 @@ export class AttrEditor<T extends IAttrEditor> {
         return this.edt.isReadonly === true;
     }
 
+    getIsNeedReloadPropertyEditor(): boolean {
+        return false;
+    }
+
 }
 
 // export let attrEditors: { [className: string]: Function;} = {};

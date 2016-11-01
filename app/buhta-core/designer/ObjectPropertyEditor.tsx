@@ -52,8 +52,12 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
         )
     }
 
-    getObjectEditors(obj: IPersistentObject): any[] {
+    getObjectEditors(obj: IPersistentObject, level: string): any[] {
+
         let ret: any[] = [];
+
+        if (!obj || !obj._class)
+            return ret;
 
         let objHandler = objectClasses[obj._class];
         if (!objHandler)
@@ -72,7 +76,7 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
             let editorInstance = getObjectInstanceOfType(editorHandler, [item]) as AttrEditor<IAttrEditor>;
 
             let row: IEasyPropertyGridRow = {
-                name: item.title || item.attrName,
+                name: level + (item.title || item.attrName),
                 value: editorInstance.getAttrValue(obj),
                 group: item.editorGroup,
                 editor: editorInstance.getEasyEditor(obj),
@@ -81,6 +85,11 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
                 valueObj: obj[item.attrName],
             };
             ret.push(row);
+
+            console.log(item.attrName, obj[item.attrName]);
+            this.getObjectEditors(obj[item.attrName], level + "<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>").forEach((item: IEasyPropertyGridRow)=> {
+                ret.push(item);
+            }, this);
 
         }, this);
 
@@ -97,19 +106,28 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
 
     setEditedObject(obj: IPersistentObject) {
         this.editedObject = obj;
-        ($(this.peContainer) as any).propertygrid("loadData", this.getObjectEditors(this.editedObject));
+        this.loadEditors();
     }
+
+    loadEditors() {
+        window.setTimeout(()=> {
+            ($(this.peContainer) as any).propertygrid("loadData", this.getObjectEditors(this.editedObject, ""));
+        }, 1);
+    }
+
 
     componentDidMount() {
 
         let peOptions = $.fn.propertygrid.defaults;
         peOptions.fit = true;
-        peOptions.data = this.getObjectEditors(this.editedObject);
+        peOptions.data = this.getObjectEditors(this.editedObject, "");
         peOptions.onBeforeEdit = (index: number, row: IEasyPropertyGridRow): boolean => {
             return !row.editorInstance.getIsReadonly();  // делаем cancel
         };
         peOptions.onEndEdit = (index: number, row: IEasyPropertyGridRow) => {
             row.editorInstance.setAttrValue(this.editedObject, row.value, row);
+            if (row.editorInstance.getIsNeedReloadPropertyEditor())
+                this.loadEditors();
             //row.valueObj=this.editedObject
         };
         peOptions.columns[0][1].formatter = (value: any, row: IEasyPropertyGridRow) => {
