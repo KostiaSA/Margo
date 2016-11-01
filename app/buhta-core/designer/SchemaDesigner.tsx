@@ -44,10 +44,10 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
     }
 
     reloadTreeSelectedNode() {
-        var node = this.easyTree("getSelected");
-        let newNode = this.createTreeData(node.obj, node.id);
-        node.text = newNode.text;
-        this.easyTree("update", node);
+        // var node = this.easyTree("getSelected");
+        // let newNode = this.createTreeData();
+        // node.text = newNode.text;
+        // this.easyTree("update", node);
     }
 
     reloadTree(idToSetFocus?: string) {
@@ -74,50 +74,50 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
     peContainer: any;
     peInstance: any;
 
-    createTreeData(obj: IPersistentObject, id: string): any {
-
-        let objHandler = objectClasses[obj._class];
-        if (!objHandler)
-            throw `object class "${obj._class}" is not registered`;
-
-        let objInstance = getObjectInstanceOfType(objHandler, [obj]) as PersistentObject<IPersistentObject>;
-        let designerFormat = objInstance.getDesignerFormat();
-
-        let root = {
-            id: id,
-            text: designerFormat.getTitle(obj),
-            state: "opened",
-            obj: obj,
-            children: designerFormat.arrays.map((item: IArrayAttrEditor, index: number)=> {
-                let itemId = id + ":" + item.attrName;
-                let itemHandler = objectClasses[item._class];
-                if (!itemHandler)
-                    throw `object class "${item._class}" is not registered`;
-                let itemInstance = getObjectInstanceOfType(itemHandler, [item]) as ArrayAttrEditor;
-
-                let ret = {
-                    id: itemId,
-                    text: itemInstance.getTitle(),
-                    state: "opened",
-                    obj: obj[item.attrName], // array
-                    children: obj[item.attrName].map((_item: any, index: number)=> {
-                        //_item[parentArray]=obj[item.attrName];
-                        return this.createTreeData(_item, itemId + ":" + index.toString());
-                    }, this),
-                    arrayAttrEditor: item
-                };
-                if (obj[item.attrName][myId])
-                    ret.id = obj[item.attrName][myId];
-
-                return ret;
-            }, this),
-            designerFormat: designerFormat
-        };
-        if (obj[myId])
-            root.id = obj[myId];
-
-        return root;
-    }
+    // createTreeData_old(obj: IPersistentObject, id: string): any {
+    //
+    //     let objHandler = objectClasses[obj._class];
+    //     if (!objHandler)
+    //         throw `object class "${obj._class}" is not registered`;
+    //
+    //     let objInstance = getObjectInstanceOfType(objHandler, [obj]) as PersistentObject<IPersistentObject>;
+    //     let designerFormat = objInstance.getDesignerFormat();
+    //
+    //     let root = {
+    //         id: id,
+    //         text: designerFormat.getTitle(obj),
+    //         state: "opened",
+    //         obj: obj,
+    //         children: designerFormat.arrays.map((item: IArrayAttrEditor, index: number)=> {
+    //             let itemId = id + ":" + item.attrName;
+    //             let itemHandler = objectClasses[item._class];
+    //             if (!itemHandler)
+    //                 throw `object class "${item._class}" is not registered`;
+    //             let itemInstance = getObjectInstanceOfType(itemHandler, [item]) as ArrayAttrEditor;
+    //
+    //             let ret = {
+    //                 id: itemId,
+    //                 text: itemInstance.getTitle(),
+    //                 state: "opened",
+    //                 obj: obj[item.attrName], // array
+    //                 children: obj[item.attrName].map((_item: any, index: number)=> {
+    //                     //_item[parentArray]=obj[item.attrName];
+    //                     return this.createTreeData();
+    //                 }, this),
+    //                 arrayAttrEditor: item
+    //             };
+    //             if (obj[item.attrName][myId])
+    //                 ret.id = obj[item.attrName][myId];
+    //
+    //             return ret;
+    //         }, this),
+    //         designerFormat: designerFormat
+    //     };
+    //     if (obj[myId])
+    //         root.id = obj[myId];
+    //
+    //     return root;
+    // }
 
 
     componentDidMount() {
@@ -195,6 +195,104 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
 
     renderTree(): JSX.Element {
         return <div ref={(e)=>this.treeContainer=e}></div>;
+    }
+
+    createTreeData() {
+
+        let nodes = [];
+        let nodeList = {};
+
+        // if (this.params.keyFieldName === undefined)
+        //     throwError("GridTreeDataSourceFromArray: property 'keyFieldName' is undefined");
+        //
+        // if (this.params.parentKeyFieldName === undefined)
+        //     throwError("GridTreeDataSourceFromArray: property 'parentKeyFieldName' is undefined");
+        //
+        // this.arrayObj.forEach((dataSourceItem: TRow, index: number) => {
+        //     let node = new InternalTreeNode();
+        //     dataSourceItem.$$dataSourceTreeNode = node;
+        //     node.sourceIndex = index;
+        //     node.key = dataSourceItem[this.params.keyFieldName!];
+        //
+        //     if (node.key === undefined)
+        //         throwError("GridTreeDataSourceFromArray: key column '" + this.params.keyFieldName + "' not found");
+        //
+        //     if (node.key !== null && node.key.toString)
+        //         node.key = node.key.toString();
+        //
+        //     node.parentKey = dataSourceItem[this.params.parentKeyFieldName!];
+        //     if (node.parentKey === undefined)
+        //         throwError("GridTreeDataSourceFromArray: parent key column '" + this.params.parentKeyFieldName + "' not found");
+        //
+        //     if (node.parentKey !== null && node.parentKey.toString)
+        //         node.parentKey = node.parentKey.toString();
+        //
+        //     this.nodeList[node.key] = node;
+        //
+        // }, this);
+        //
+        // for (let key in this.nodeList) {
+        //     let node = this.nodeList[key];
+        //     if (node.parentKey !== undefined) {
+        //         let parentNode = this.nodeList[node.parentKey];
+        //         if (parentNode !== undefined) {
+        //             if ((node  as InternalTreeNode).parent !== undefined)
+        //                 throwError("GridTreeDataSourceFromArray: internal error");
+        //             (node  as InternalTreeNode).parent = parentNode;
+        //             (parentNode as InternalTreeNode).children.push(node);
+        //         }
+        //     }
+        // }
+        //
+        // for (let key in this.nodeList) {
+        //     let node = this.nodeList[key];
+        //     if (node.parentKey === null) {
+        //         this.nodes.push(node);
+        //     }
+        // }
+        //
+        // // сортировка children и проставление level
+        // let sortNodes = (nodes: InternalTreeNode[]): InternalTreeNode[] => {
+        //     if (this.params.positionFieldName !== undefined) {
+        //         return nodes.sort((a: InternalTreeNode, b: InternalTreeNode) => {
+        //
+        //             let aa = this.arrayObj[a.sourceIndex][this.params.positionFieldName!];
+        //             if (aa === undefined)
+        //                 throwError("GridTreeDataSourceFromArray: position column '" + this.params.positionFieldName + "' not found");
+        //             if (!_.isNumber(aa))
+        //                 throwError("GridTreeDataSourceFromArray: position column '" + this.params.positionFieldName + "' must be a number");
+        //
+        //             let bb = this.arrayObj[b.sourceIndex][this.params.positionFieldName!];
+        //             if (bb === undefined)
+        //                 throwError("GridTreeDataSourceFromArray: position column '" + this.params.positionFieldName + "' not found");
+        //             if (!_.isNumber(bb))
+        //                 throwError("GridTreeDataSourceFromArray: position column '" + this.params.positionFieldName + "' must be a number");
+        //
+        //             return numberCompare(aa, bb);
+        //         });
+        //     }
+        //     else {
+        //         return nodes.sort((a: InternalTreeNode, b: InternalTreeNode) => numberCompare(a.sourceIndex, b.sourceIndex));
+        //     }
+        // };
+        //
+        //
+        // let processNode = (node: InternalTreeNode, level: number) => {
+        //     node.level = level;
+        //     node.expanded = this.params.autoExpandNodesToLevel !== undefined && node.level < this.params.autoExpandNodesToLevel;
+        //     node.children = sortNodes(node.children);
+        //     node.children.forEach((node: InternalTreeNode) => {
+        //         processNode(node, level + 1);
+        //     }, this);
+        // };
+        //
+        // this.nodes.forEach((node: InternalTreeNode) => {
+        //     processNode(node, 0);
+        // }, this);
+        //
+        // this.nodes = sortNodes(this.nodes);
+        // //this.state.nodes = this.state.nodes.sort((a, b) => numberCompare(a.sourceIndex, b.sourceIndex));
+
     }
 
 }
