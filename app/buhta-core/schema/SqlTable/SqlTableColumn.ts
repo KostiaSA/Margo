@@ -7,6 +7,7 @@ import {objectClasses} from "../../objectClasses";
 import {getClassesInheritsFrom} from "../../utils/getClassesInheritsFrom";
 import {SqlStringDataType} from "./SqlStringDataType";
 import {getObjectOf} from "../../utils/getObjectOf";
+import {Action} from "../../designer/Action";
 
 export interface ISqlTableColumn extends IPersistentObject {
     name: string;
@@ -54,6 +55,15 @@ export class SqlTableColumn extends PersistentObject<ISqlTableColumn> {
         ret.getTitle = (obj: ISqlTableColumn)=> {
             return obj.name + ":  " + getObjectOf<SqlTableColumn>(obj.dataType).toString();
         };
+
+        ret.actions=[
+            {_class:Action.getClassName(), text:`удалить колонку "${this.obj.name}"`, onClick:()=>{
+                //let newCol=SqlTableColumn.createNew();
+                //this.obj.columns.push(newCol);
+                return;// newCol;
+            }}
+        ];
+
         return ret;
     }
 

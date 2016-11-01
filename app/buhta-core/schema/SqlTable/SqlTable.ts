@@ -44,7 +44,7 @@ export class SqlTable extends SchemaObject<ISqlTable> {
             title: "колонки",
             _class: ArrayAttrEditor.getClassName(),
             actions:[
-                {_class:Action.getClassName(), text:"новая колонка", onClick:()=>{
+                {_class:Action.getClassName(), text:"добавить новую колонку", onClick:()=>{
                     let newCol=SqlTableColumn.createNew();
                     this.obj.columns.push(newCol);
                     return newCol;

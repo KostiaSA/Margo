@@ -57,7 +57,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
         this.easyTree("update", node);
     }
 
-    reloadTree(idToSetFocus?:string) {
+    reloadTree(idToSetFocus?: string) {
         this.easyTree("loadData", [this.createTreeData(this.props.editedObject, "root")]);
         if (idToSetFocus) {
             var nodeToFocus = this.easyTree("find", idToSetFocus);
@@ -113,13 +113,14 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
                     arrayAttrEditor: item
                 };
                 if (obj[item.attrName][myIdPropName])
-                    ret.id=obj[item.attrName][myIdPropName];
+                    ret.id = obj[item.attrName][myIdPropName];
 
                 return ret;
-            }, this)
+            }, this),
+            designerFormat: designerFormat
         };
         if (obj[myIdPropName])
-            root.id=obj[myIdPropName];
+            root.id = obj[myIdPropName];
 
         return root;
     }
@@ -140,15 +141,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
                 let menuEl = $("#context-menu") as any;
                 menuEl.empty();
 
-                // menuEl.menu("appendItem", {
-                //     text: 'New жопа Item',
-                //     iconCls: 'icon-ok',
-                //     onclick: function () {
-                //         alert('New Item')
-                //     }
-                // });
-
-                if (node.arrayAttrEditor) {
+                if (node.arrayAttrEditor && node.arrayAttrEditor.actions) {
                     node.arrayAttrEditor.actions.forEach((act: IAction)=> {
                         menuEl.menu("appendItem", {
                             text: act.text,
@@ -157,7 +150,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
                                 if (act.onClick) {
                                     let newObject = act.onClick();
                                     if (newObject)
-                                        newObject[myIdPropName]=getRandomString();
+                                        newObject[myIdPropName] = getRandomString();
                                     this.reloadTree(newObject[myIdPropName]);
 
                                 }
@@ -167,13 +160,33 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
                     }, this);
                 }
 
-                menuEl.menu("show", {
-                    left: e.pageX,
-                    top: e.pageY
-                });
+                if (node.designerFormat && node.designerFormat.actions) {
+                    node.designerFormat.actions.forEach((act: IAction)=> {
+                        menuEl.menu("appendItem", {
+                            text: act.text,
+                            iconCls: act.iconCls,
+                            onclick: () => {
+                                if (act.onClick) {
+                                    let newObject = act.onClick();
+                                    if (newObject) {
+                                        newObject[myIdPropName] = getRandomString();
+                                        this.reloadTree(newObject[myIdPropName]);
+                                    }
+                                    else
+                                        this.reloadTree();
+                                }
+                            }
+                        });
 
+                    }, this);
+                }
 
-                //console.log(($("#context-menu") as any).menu("options"));
+                if (menuEl.children().length>0) {
+                    menuEl.menu("show", {
+                        left: e.pageX,
+                        top: e.pageY
+                    });
+                }
             }
         };
 
