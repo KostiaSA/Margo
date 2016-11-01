@@ -3,7 +3,7 @@ import {IPersistentObject, PersistentObject} from "../schema/SchemaObject";
 export interface IAction extends IPersistentObject {
     text: string;
     iconCls?: string;
-    onClick?: ()=>any;  // в случае, когда action создает новый объект или ищет объект, его надо вернуть
+    onClick?: (parentObj?:any[])=>any;  // в случае, когда action создает новый объект или ищет объект, его надо вернуть
 }
 
 export class Action extends PersistentObject<IAction> {

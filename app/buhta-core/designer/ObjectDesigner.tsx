@@ -16,7 +16,9 @@ export interface IObjectDesignerProps {
 }
 
 
-let myIdPropName = Symbol();
+let myId = Symbol();
+//let parentObj = Symbol();
+//let parentArray = Symbol();
 
 export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     constructor(props: any, context: any) {
@@ -106,21 +108,22 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
                     id: itemId,
                     text: itemInstance.getTitle(),
                     state: "opened",
-                    obj: obj[item.attrName],
+                    obj: obj[item.attrName], // array
                     children: obj[item.attrName].map((_item: any, index: number)=> {
+                        //_item[parentArray]=obj[item.attrName];
                         return this.createTreeData(_item, itemId + ":" + index.toString());
                     }, this),
                     arrayAttrEditor: item
                 };
-                if (obj[item.attrName][myIdPropName])
-                    ret.id = obj[item.attrName][myIdPropName];
+                if (obj[item.attrName][myId])
+                    ret.id = obj[item.attrName][myId];
 
                 return ret;
             }, this),
             designerFormat: designerFormat
         };
-        if (obj[myIdPropName])
-            root.id = obj[myIdPropName];
+        if (obj[myId])
+            root.id = obj[myId];
 
         return root;
     }
@@ -129,7 +132,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     componentDidMount() {
 
         let treeOptions = {
-            data: [this.createTreeData(this.props.editedObject, "root")],
+          //  data: здесь не заполнять !!!
             onSelect: (node: any)=> {
                 this.selectedObject = node.obj;
                 this.propertyEditorInstance.setEditedObject(this.selectedObject);
@@ -148,10 +151,11 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
                             iconCls: act.iconCls,
                             onclick: () => {
                                 if (act.onClick) {
-                                    let newObject = act.onClick();
+                                    let parentNode = this.easyTree("getParent", node.target);
+                                    let newObject = act.onClick(parentNode!.obj);
                                     if (newObject)
-                                        newObject[myIdPropName] = getRandomString();
-                                    this.reloadTree(newObject[myIdPropName]);
+                                        newObject[myId] = getRandomString();
+                                    this.reloadTree(newObject[myId]);
 
                                 }
                             }
@@ -167,10 +171,11 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
                             iconCls: act.iconCls,
                             onclick: () => {
                                 if (act.onClick) {
-                                    let newObject = act.onClick();
+                                    let parentNode = this.easyTree("getParent", node.target);
+                                    let newObject = act.onClick(parentNode!.obj);
                                     if (newObject) {
-                                        newObject[myIdPropName] = getRandomString();
-                                        this.reloadTree(newObject[myIdPropName]);
+                                        newObject[myId] = getRandomString();
+                                        this.reloadTree(newObject[myId]);
                                     }
                                     else
                                         this.reloadTree();
@@ -181,7 +186,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
                     }, this);
                 }
 
-                if (menuEl.children().length>0) {
+                if (menuEl.children().length > 0) {
                     menuEl.menu("show", {
                         left: e.pageX,
                         top: e.pageY
@@ -192,6 +197,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
 
         window.setTimeout(()=> {
             this.easyTree(treeOptions);
+            this.easyTree("loadData", [this.createTreeData(this.props.editedObject, "root")]);
         }, 1);
 
     };

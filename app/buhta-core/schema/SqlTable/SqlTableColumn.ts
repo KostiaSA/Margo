@@ -56,12 +56,35 @@ export class SqlTableColumn extends PersistentObject<ISqlTableColumn> {
             return obj.name + ":  " + getObjectOf<SqlTableColumn>(obj.dataType).toString();
         };
 
-        ret.actions=[
-            {_class:Action.getClassName(), text:`удалить колонку "${this.obj.name}"`, onClick:()=>{
-                //let newCol=SqlTableColumn.createNew();
-                //this.obj.columns.push(newCol);
-                return;// newCol;
-            }}
+        ret.actions = [
+            {
+                _class: Action.getClassName(),
+                text: `удалить колонку "${this.obj.name}"`,
+                onClick: (parentArray: any[])=> {
+                    //console.log(parentArray);
+
+                    let delItemIndex=-1;
+                    if (parentArray) {
+                        delItemIndex = parentArray.indexOf(this.obj);
+                        if (delItemIndex < 0)
+                            throw "delItemIndex<0";
+                        parentArray.splice(delItemIndex, 1);
+                    }
+                    else
+                        throw "parentArray is undefined";
+
+                    if (parentArray.length === 0)
+                        return parentArray;
+                    else if (parentArray[delItemIndex])
+                        return parentArray[delItemIndex]
+                    else
+                        return parentArray[delItemIndex - 1];
+
+                    //let newCol=SqlTableColumn.createNew();
+                    //this.obj.columns.push(newCol);
+                    //return;// newCol;
+                }
+            }
         ];
 
         return ret;
