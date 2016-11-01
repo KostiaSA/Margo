@@ -1,5 +1,7 @@
-import {IAttrEditor, AttrEditor} from "./AttrEditor";
+
 import {IPersistentObject} from "../../schema/SchemaObject";
+import {IAttrEditor} from "../ObjectPropertyEditor";
+import {AttrEditor} from "./AttrEditor";
 
 export interface IStringAttrEditor extends IAttrEditor {
     maxLen?: number;

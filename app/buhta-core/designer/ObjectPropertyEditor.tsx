@@ -4,18 +4,33 @@ import {Layout} from "../ui/Layout";
 import {IPersistentObject, PersistentObject} from "../schema/SchemaObject";
 import {objectClasses} from "../objectClasses";
 import {getObjectInstanceOfType} from "../utils/getObjectInstanceOfType";
-import {AttrEditor, IAttrEditor} from "./editors/AttrEditor";
+import {AttrEditor} from "./editors/AttrEditor";
 
 export interface IObjectPropertEditorProps {
     editedObject: IPersistentObject;
 }
 
-interface IEasyPropertyGridRow {
+export interface IAttrFormatter {
+    (value: any, row: IEasyPropertyGridRow): string;
+}
+
+export interface IAttrEditor extends IPersistentObject {
+    attrName: string;
+    title?: string;
+    //editor: IAttrEditor;
+    editorGroup?: string;
+    isReadonly?: boolean;
+    formatter?:IAttrFormatter;
+}
+
+export interface IEasyPropertyGridRow {
     name: string;
     value: any,
-    group?: string,
-    editor: string,
-    _editorInstance: AttrEditor<IAttrEditor>,  // наша добавка
+    group?: string;
+    editor: string;
+    editorInstance: AttrEditor<IAttrEditor>;  // наша добавка
+    formatter?: IAttrFormatter; // наша добавка
+    valueObj?: IPersistentObject,
 }
 
 
@@ -58,10 +73,11 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
 
             let row: IEasyPropertyGridRow = {
                 name: item.title || item.attrName,
-                value:  editorInstance.getAttrValue(obj),
+                value: editorInstance.getAttrValue(obj),
                 group: item.editorGroup,
                 editor: editorInstance.getEasyEditor(obj),
-                _editorInstance: editorInstance,
+                editorInstance: editorInstance,
+                formatter: editorInstance.getFormatter()
             };
             ret.push(row);
 
@@ -85,25 +101,26 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
 
     componentDidMount() {
 
-        let peOptions = {
-            fit: true,
-            data: this.getObjectEditors(this.editedObject),
-            onBeforeEdit: (index: number, row: IEasyPropertyGridRow): boolean => {
-                return !row._editorInstance.getIsReadonly();  // делаем cancel
-            },
-            onEndEdit: (index: number, row: IEasyPropertyGridRow) => {
-                row._editorInstance.setAttrValue(this.editedObject, row.value);
-            }
+        let peOptions = $.fn.propertygrid.defaults;
+        peOptions.fit = true;
+        peOptions.data = this.getObjectEditors(this.editedObject);
+        peOptions.onBeforeEdit = (index: number, row: IEasyPropertyGridRow): boolean => {
+            return !row.editorInstance.getIsReadonly();  // делаем cancel
         };
+        peOptions.onEndEdit = (index: number, row: IEasyPropertyGridRow) => {
+            row.editorInstance.setAttrValue(this.editedObject, row.value);
+        };
+        peOptions.columns[0][1].formatter = (value: any, row: IEasyPropertyGridRow) => {
+            if (row.formatter)
+                return row.formatter(value, row)
+            else
+                return value;
+        };
+
 
         window.setTimeout(()=> {
             this.peInstance = ($(this.peContainer) as any).propertygrid(peOptions);
-
-            // this.getObjectEditors(this.props.editedObject).forEach((item:any)=>{
-            //     this.peInstance.propertygrid("appendRow", item);
-            // },this);
-
-
+            console.log(($(this.peContainer) as any).propertygrid("options").columns[0][1]);
         }, 1);
 
     };

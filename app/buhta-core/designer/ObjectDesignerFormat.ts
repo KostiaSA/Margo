@@ -1,6 +1,7 @@
-import {IAttrEditor} from "./editors/AttrEditor";
+
 import {IPersistentObject} from "../schema/SchemaObject";
 import {IArrayAttrEditor} from "./editors/ArrayAttrEditor";
+import {IAttrEditor} from "./ObjectPropertyEditor";
 
 
 // export const NUMBER_EDITOR = "number";

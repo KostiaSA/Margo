@@ -1,9 +1,10 @@
-import {IAttrEditor, AttrEditor} from "./AttrEditor";
+import {AttrEditor} from "./AttrEditor";
 import {IPersistentObject} from "../../schema/SchemaObject";
 import {getObjectOf} from "../../utils/getObjectOf";
 import {getObjectInstanceOfType} from "../../utils/getObjectInstanceOfType";
 import {getObjectHandlerOf} from "../../utils/getObjectHandlerOf";
 import {getObjectOfClassName} from "../../utils/getObjectOfClassName";
+import {IAttrEditor, IAttrFormatter, IEasyPropertyGridRow} from "../ObjectPropertyEditor";
 
 export interface IObjectAttrEditor extends IAttrEditor {
     getObjectClassesList(): Function[];
@@ -43,6 +44,16 @@ export class ObjectAttrEditor extends AttrEditor<IObjectAttrEditor> {
                 })
             }
         };
+    }
+
+    getFormatter(): IAttrFormatter {
+        let formatter = super.getFormatter();
+        if (!formatter) {
+            formatter = (value: any, row: IEasyPropertyGridRow)=> {
+                return "value"
+            };
+        }
+        return formatter;
     }
 
     getAttrValue(editedObj: IPersistentObject): any {

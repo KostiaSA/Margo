@@ -1,12 +1,6 @@
 import {IPersistentObject} from "../../schema/SchemaObject";
+import {IAttrFormatter, IEasyPropertyGridRow, IAttrEditor} from "../ObjectPropertyEditor";
 
-export interface IAttrEditor extends IPersistentObject {
-    attrName: string;
-    title?: string;
-    //editor: IAttrEditor;
-    editorGroup?: string;
-    isReadonly?: boolean;
-}
 
 export class AttrEditor<T extends IAttrEditor> {
     constructor(public edt: T) {
@@ -16,12 +10,16 @@ export class AttrEditor<T extends IAttrEditor> {
         throw "abstract error";
     }
 
+    getFormatter(): IAttrFormatter | undefined{
+        return this.edt.formatter;
+    }
+
     getTitle(): string {
         return this.edt.title || this.edt.attrName;
     }
 
-    getAttrValue(editedObj: IPersistentObject):any {
-        return  editedObj[this.edt.attrName] ;
+    getAttrValue(editedObj: IPersistentObject): any {
+        return editedObj[this.edt.attrName];
     }
 
     setAttrValue(editedObj: IPersistentObject, value: any) {
