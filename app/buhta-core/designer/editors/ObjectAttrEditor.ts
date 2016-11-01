@@ -1,5 +1,5 @@
 import {AttrEditor} from "./AttrEditor";
-import {IPersistentObject} from "../../schema/SchemaObject";
+import {IPersistentObject, PersistentObject} from "../../schema/SchemaObject";
 import {getObjectOf} from "../../utils/getObjectOf";
 import {getObjectInstanceOfType} from "../../utils/getObjectInstanceOfType";
 import {getObjectHandlerOf} from "../../utils/getObjectHandlerOf";
@@ -51,19 +51,32 @@ export class ObjectAttrEditor extends AttrEditor<IObjectAttrEditor> {
         if (!formatter) {
             formatter = (value: any, row: IEasyPropertyGridRow)=> {
 //                console.log("eee",row.valueObj);
-                return (getObjectHandlerOf(row.valueObj) as any).getClassTitle();;
+                return (getObjectHandlerOf(row.valueObj) as any).getClassTitle();
+                ;
             };
         }
         return formatter;
     }
 
     getAttrValue(editedObj: IPersistentObject): any {
-        return (getObjectHandlerOf(editedObj[this.edt.attrName]) as any).getClassTitle();
+        return (getObjectHandlerOf(editedObj[this.edt.attrName]) as any).getClassName();
     }
 
-    setAttrValue(editedObj: IPersistentObject, value: any, row: IEasyPropertyGridRow) {
-        editedObj[this.edt.attrName] = getObjectOfClassName(value);
-        row.valueObj = editedObj[this.edt.attrName];
+    setAttrValue(editedObj: IPersistentObject, value: string /* _class */, row: IEasyPropertyGridRow) {
+
+        // при смене объекта мы копируем из старого все свойства, имена которых есть дизайнере нового
+        let oldObj = editedObj[this.edt.attrName];
+        let newObj = getObjectOfClassName(value);
+
+        let newObjInstance = getObjectOf<PersistentObject<IPersistentObject>>(newObj);
+        let newObjDesignerFormat = newObjInstance.getDesignerFormat();
+
+        newObjDesignerFormat.attributes.forEach((item: IAttrEditor)=> {
+            if (oldObj[item.attrName] !== undefined)
+                newObj[item.attrName] = oldObj[item.attrName];
+        }, this);
+
+        editedObj[this.edt.attrName]=newObj;
     }
 
     getIsNeedReloadPropertyEditor(): boolean {

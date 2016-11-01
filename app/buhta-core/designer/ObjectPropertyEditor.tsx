@@ -31,6 +31,7 @@ export interface IEasyPropertyGridRow {
     editorInstance: AttrEditor<IAttrEditor>;  // наша добавка
     formatter?: IAttrFormatter; // наша добавка
     valueObj: IPersistentObject,
+    editedObj: IPersistentObject,
 }
 
 
@@ -83,10 +84,11 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
                 editorInstance: editorInstance,
                 formatter: editorInstance.getFormatter(),
                 valueObj: obj[item.attrName],
+                editedObj:obj
             };
             ret.push(row);
 
-            console.log(item.attrName, obj[item.attrName]);
+            //console.log(item.attrName, obj[item.attrName]);
             this.getObjectEditors(obj[item.attrName], level + "<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>").forEach((item: IEasyPropertyGridRow)=> {
                 ret.push(item);
             }, this);
@@ -125,7 +127,7 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
             return !row.editorInstance.getIsReadonly();  // делаем cancel
         };
         peOptions.onEndEdit = (index: number, row: IEasyPropertyGridRow) => {
-            row.editorInstance.setAttrValue(this.editedObject, row.value, row);
+            row.editorInstance.setAttrValue(row.editedObj, row.value, row);
             if (row.editorInstance.getIsNeedReloadPropertyEditor())
                 this.loadEditors();
             //row.valueObj=this.editedObject
