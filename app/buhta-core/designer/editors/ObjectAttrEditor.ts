@@ -64,19 +64,20 @@ export class ObjectAttrEditor extends AttrEditor<IObjectAttrEditor> {
 
     setAttrValue(editedObj: IPersistentObject, value: string /* _class */, row: IEasyPropertyGridRow) {
 
-        // при смене объекта мы копируем из старого все свойства, имена которых есть дизайнере нового
         let oldObj = editedObj[this.edt.attrName];
         let newObj = getObjectOfClassName(value);
 
-        let newObjInstance = getObjectOf<PersistentObject<IPersistentObject>>(newObj);
-        let newObjDesignerFormat = newObjInstance.getDesignerFormat();
+        if (oldObj._class === newObj._class) {
+            // при смене объекта мы копируем из старого все свойства, имена которых есть дизайнере нового
+            let newObjInstance = getObjectOf<PersistentObject<IPersistentObject>>(newObj);
+            let newObjDesignerFormat = newObjInstance.getDesignerFormat();
 
-        newObjDesignerFormat.attributes.forEach((item: IAttrEditor)=> {
-            if (oldObj[item.attrName] !== undefined)
-                newObj[item.attrName] = oldObj[item.attrName];
-        }, this);
-
-        editedObj[this.edt.attrName]=newObj;
+            newObjDesignerFormat.attributes.forEach((item: IAttrEditor)=> {
+                if (oldObj[item.attrName] !== undefined)
+                    newObj[item.attrName] = oldObj[item.attrName];
+            }, this);
+        }
+        editedObj[this.edt.attrName] = newObj;
     }
 
     getIsNeedReloadPropertyEditor(): boolean {
