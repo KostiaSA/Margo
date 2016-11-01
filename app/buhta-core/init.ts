@@ -21,4 +21,4 @@ export function init(){
     registerClass(ObjectAttrEditor);
 }
 
-let x= convertSchemas();
+let x= convertSchemas;

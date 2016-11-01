@@ -1,14 +1,17 @@
 import {cloneSqlToMongo} from "./cloneSqlToMongo";
 var sql = require('mssql');
 import {MongoClient, Db} from "mongodb";
+import {sleep} from "./buhta-core/utils/sleep";
+import {getSchemaDb} from "./buhta-core/schema/getSchemaDb";
+import {getSchemaObjectCollection} from "./buhta-core/schema/getSchemaObjectCollection";
 
 var config = {
     user: 'sa',
     password: '',
     server: 'dark',
     database: "mag3666",
-    options:{
-        instanceName:"sql2012"
+    options: {
+        instanceName: "sql2012"
     }
 };
 
@@ -25,7 +28,35 @@ export async function convertSchemas() {
     db.close();
 }
 
-(window as any).x=convertSchemas;
+(window as any).x = convertSchemas;
+
+export async function testMongoConnect() {
+//    var url = 'mongodb://KostiaSA:sonyk795@ds061206.mlab.com:61206/margo';
+
+    let counter = 0;
+
+//    var url = 'mongodb://green/mik';
+    //  let db: any;
+
+    for (let i = 0; i < 1; i++) {
+        //if (!db)
+        //  db = await MongoClient.connect(url);
+
+        //let db = await getSchemaDb();
+
+        //var collection = db.collection('SchemaObject');
+        (await getSchemaObjectCollection()).find().limit(10000).toArray().then((a: any[])=> {
+            console.log(i, a);
+        }).catch((err: any)=> {
+            console.error(err);
+
+        });
+//        db.close();
+    }
+}
+
+(window as any).z = testMongoConnect;
+
 
 async function convertMikDocs_internal(db: Db) {
     var collection = db.collection("SchemaObject");
