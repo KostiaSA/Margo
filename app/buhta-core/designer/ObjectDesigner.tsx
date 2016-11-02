@@ -8,6 +8,8 @@ import {IArrayAttrEditor, ArrayAttrEditor} from "./editors/ArrayAttrEditor";
 import {IAction} from "./Action";
 import {getRandomString} from "../utils/getRandomString";
 import {objectClasses} from "../objectClasses";
+import {EasyLinkButton} from "../easyui/linkbutton";
+import {Div} from "../easyui/Div";
 
 export interface IObjectDesignerProps {
     editedObject: IPersistentObject;
@@ -63,10 +65,12 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
         }
     }
 
+    layoutContainer: Layout;
+
     render(): JSX.Element {
-        console.log("render obj -designer")
+        //console.log("render obj -designer")
         return (
-            <Layout _class="Layout" fit={true} panels={[
+            <Layout ref={(e)=>this.layoutContainer=e} _class="Layout" fit={true} panels={[
                             {_class:"LayoutPanel", region:"north",  content:this.renderToolbar(), height:32},
                             {_class:"LayoutPanel", title:"Состав объекта", region:"center",  content:this.renderTree()},
                             {_class:"LayoutPanel", title:"Свойства", region:"east",width:350, split:true, content:this.renderPropertyEditor()},
@@ -206,9 +210,13 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
 
     renderToolbar(): JSX.Element {
         return (
+
             <div>
-                это тоолбар
-            </div>);
+                <EasyLinkButton plain text={getRandomString()}
+                                onPress={()=>{console.log("click"); this.layoutContainer.forceUpdateNorth(this.renderToolbar()) }}/>
+            </div>
+
+        );
     }
 
 }

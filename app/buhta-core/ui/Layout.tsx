@@ -35,6 +35,13 @@ export class Layout extends React.Component<ILayoutProps,any> {
     layoutContainer: any;
     layoutInstance: any;
 
+    componentDidUpdate() {
+        console.log("componentDidUpdate()");
+    }
+
+    forceUpdateNorth(content:any){
+        ReactDOM.render(content, this.layoutInstance.layout("panel", "north")[0]);
+    }
 
     componentDidMount() {
 
