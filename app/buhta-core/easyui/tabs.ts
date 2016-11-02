@@ -1,6 +1,6 @@
 import {IEasyBasePanel} from "./panel";
 
-export interface IEasyTabPanel extends IEasyBasePanel {
+export interface IEasyTabs extends IEasyBasePanel {
     plain: boolean;
     scrollIncrement: number;
     scrollDuration: number;
@@ -24,4 +24,19 @@ export interface IEasyTabPanel extends IEasyBasePanel {
     onAdd: (title: string, index: number)=>void;
     onUpdate: (title: string, index: number)=>void;
     onContextMenu: (e: any, title: string, index: number)=>void;
+}
+
+export interface IEasyTabsPanel {
+    id: string;
+    title: string;
+    content: string;
+    href: string;
+    cache: boolean;
+    iconCls: string;
+    width: number;
+    height: number;
+    collapsible: boolean;
+    closable: boolean;
+    selected: boolean;
+    disabled: boolean;
 }
