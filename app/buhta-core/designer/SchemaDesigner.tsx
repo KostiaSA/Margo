@@ -46,13 +46,10 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
         this.reloadTreeSelectedNode();
     }
 
-    renderTabs(): JSX.Element {
-        return (
-            <div>
-                это табс
-            </div>);
-    }
 
+    easyTabs = (arg1: any, arg2?: any): any=> {
+        return ($(this.tabsContainer) as any).tree(arg1, arg2);
+    }
 
     easyTree = (arg1: any, arg2?: any): any=> {
         return ($(this.treeContainer) as any).tree(arg1, arg2);
@@ -86,8 +83,7 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
     }
 
     treeContainer: any;
-    // peContainer: any;
-    // peInstance: any;
+    tabsContainer: any;
 
     // createTreeData_old(obj: IPersistentObject, id: string): any {
     //
@@ -153,7 +149,7 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
                <span style={style}>
                  {node.obj.name}
                </span>
-               {childCount}
+                {childCount}
             </span>
         );
 
@@ -164,6 +160,11 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
     refreshTreeNode = (node: ITreeNode)=> {
         node.text = this.treeNodeFormatter(node);
         this.easyTree("update", node);
+    };
+
+    openTreeNode = (node: ITreeNode)=> {
+        //node.text = this.treeNodeFormatter(node);
+        //this.easyTree("update", node);
     };
 
 
@@ -184,64 +185,81 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
 
             onSelect: (node: any)=> {
                 this.selectedObject = node.obj;
-                this.tabsInstance.setEditedObject(this.selectedObject);
+                //this.tabsInstance.setEditedObject(this.selectedObject);
             },
-            // onContextMenu: (e: any, node: any) => {
-            //     e.preventDefault();
-            //     this.easyTree("select", node.target);
-            //
-            //     let menuEl = $("#context-menu") as any;
-            //     menuEl.empty();
-            //
-            //     if (node.arrayAttrEditor && node.arrayAttrEditor.actions) {
-            //         node.arrayAttrEditor.actions.forEach((act: IAction)=> {
-            //             menuEl.menu("appendItem", {
-            //                 text: act.text,
-            //                 iconCls: act.iconCls,
-            //                 onclick: () => {
-            //                     if (act.onClick) {
-            //                         let parentNode = this.easyTree("getParent", node.target);
-            //                         let newObject = act.onClick(parentNode!.obj);
-            //                         if (newObject)
-            //                             newObject[myId] = getRandomString();
-            //                         this.reloadTree(newObject[myId]);
-            //
-            //                     }
-            //                 }
-            //             });
-            //
-            //         }, this);
-            //     }
-            //
-            //     if (node.designerFormat && node.designerFormat.actions) {
-            //         node.designerFormat.actions.forEach((act: IAction)=> {
-            //             menuEl.menu("appendItem", {
-            //                 text: act.text,
-            //                 iconCls: act.iconCls,
-            //                 onclick: () => {
-            //                     if (act.onClick) {
-            //                         let parentNode = this.easyTree("getParent", node.target);
-            //                         let newObject = act.onClick(parentNode!.obj);
-            //                         if (newObject) {
-            //                             newObject[myId] = getRandomString();
-            //                             this.reloadTree(newObject[myId]);
-            //                         }
-            //                         else
-            //                             this.reloadTree();
-            //                     }
-            //                 }
-            //             });
-            //
-            //         }, this);
-            //     }
-            //
-            //     if (menuEl.children().length > 0) {
-            //         menuEl.menu("show", {
-            //             left: e.pageX,
-            //             top: e.pageY
-            //         });
-            //     }
-            // }
+            onContextMenu: (e: any, node: any) => {
+                e.preventDefault();
+                this.easyTree("select", node.target);
+
+                let menuEl = $("#context-menu") as any;
+                menuEl.empty();
+
+                menuEl.menu("appendItem", {
+                    text: "открыть",
+                    //iconCls: act.iconCls,
+                    onclick: () => {
+                        console.log("open", node);
+                        this.openTreeNode(node);
+                        // if (act.onClick) {
+                        //     let parentNode = this.easyTree("getParent", node.target);
+                        //     let newObject = act.onClick(parentNode!.obj);
+                        //     if (newObject)
+                        //         newObject[myId] = getRandomString();
+                        //     this.reloadTree(newObject[myId]);
+                        //
+                        // }
+                    }
+                });
+
+                // if (node.arrayAttrEditor && node.arrayAttrEditor.actions) {
+                //     node.arrayAttrEditor.actions.forEach((act: IAction)=> {
+                //         menuEl.menu("appendItem", {
+                //             text: act.text,
+                //             iconCls: act.iconCls,
+                //             onclick: () => {
+                //                 if (act.onClick) {
+                //                     let parentNode = this.easyTree("getParent", node.target);
+                //                     let newObject = act.onClick(parentNode!.obj);
+                //                     if (newObject)
+                //                         newObject[myId] = getRandomString();
+                //                     this.reloadTree(newObject[myId]);
+                //
+                //                 }
+                //             }
+                //         });
+                //
+                //     }, this);
+                // }
+                //
+                // if (node.designerFormat && node.designerFormat.actions) {
+                //     node.designerFormat.actions.forEach((act: IAction)=> {
+                //         menuEl.menu("appendItem", {
+                //             text: act.text,
+                //             iconCls: act.iconCls,
+                //             onclick: () => {
+                //                 if (act.onClick) {
+                //                     let parentNode = this.easyTree("getParent", node.target);
+                //                     let newObject = act.onClick(parentNode!.obj);
+                //                     if (newObject) {
+                //                         newObject[myId] = getRandomString();
+                //                         this.reloadTree(newObject[myId]);
+                //                     }
+                //                     else
+                //                         this.reloadTree();
+                //                 }
+                //             }
+                //         });
+                //
+                //     }, this);
+                // }
+
+                if (menuEl.children().length > 0) {
+                    menuEl.menu("show", {
+                        left: e.pageX,
+                        top: e.pageY
+                    });
+                }
+            }
         };
 
         window.setTimeout(()=> {
@@ -256,11 +274,22 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
         }, 1);
 
 
+        let tabsOptions = {
+            fit:true
+        };
+        window.setTimeout(()=> {
+            this.easyTabs(tabsOptions);
+        }, 1);
+
+
     };
 
     renderTree(): JSX.Element {
-        console.log("renderTree()");
-        return <div ref={(e)=>{this.treeContainer=e; console.log(e);}}></div>;
+        return <div ref={(e)=>{this.treeContainer=e; }}></div>;
+    }
+
+    renderTabs(): JSX.Element {
+        return <div ref={(e)=>{this.tabsContainer=e; }}></div>;
     }
 
     nodes: ITreeNode[];
