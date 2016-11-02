@@ -37,16 +37,16 @@ export class PersistentPage extends SchemaObject<IPersistentPageProps> {
         return "buhta.PersistentPageComponent";
     }
 
-    static createNew(): IPersistentPageProps {
-        return {
-            _class: this.getClassName(),
-            name: "Новая page",
-            columns: [],
-            createDate: new Date(),
-            createUserID: getRandomString(),
-            key: getRandomString()
-        } as IPersistentPageProps;
-    }
+    // static createNew(): IPersistentPageProps {
+    //     return {
+    //         _class: this.getClassName(),
+    //         name: "Новая page",
+    //         columns: [],
+    //         createDate: new Date(),
+    //         createUserID: getRandomString(),
+    //         key: getRandomString()
+    //     } as IPersistentPageProps;
+    // }
 
     prepareToSave() {
 

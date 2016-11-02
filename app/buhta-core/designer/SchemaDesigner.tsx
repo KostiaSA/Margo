@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 import {Layout} from "../ui/Layout";
 import {IPersistentObject, PersistentObject, ISchemaObject} from "../schema/SchemaObject";
 import {getObjectInstanceOfType} from "../utils/getObjectInstanceOfType";
@@ -10,6 +9,8 @@ import {objectClasses} from "../objectClasses";
 import {IEasyTreeNode} from "../easyui/tree";
 import {getSchemaObjectCollection} from "../schema/getSchemaObjectCollection";
 import {compareNumbers} from "../utils/compareNumbers";
+import {renderToStaticHtml} from "../utils/renderToStaticHtml";
+
 
 export interface ISchemaDesignerProps {
     //  editedObject: IPersistentObject;
@@ -134,10 +135,53 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
     // }
 
 
+    treeNodeFormatter = (node: ITreeNode)=> {
+
+        let childCount: React.ReactElement<any> | null = null;
+        if (node.children)
+            childCount =<span style={{color:"gray",fontSize:11}}> ({node.children.length})</span>;
+
+        let style: React.CSSProperties = {
+            fontWeight: "normal"
+        }
+
+        if (node.children && node.state!.startsWith("open"))
+            style.fontWeight = "bold";
+
+        let html = renderToStaticHtml(
+            <span>
+               <span style={style}>
+                 {node.obj.name}
+               </span>
+               {childCount}
+            </span>
+        );
+
+        return html;
+
+    };
+
+    refreshTreeNode = (node: ITreeNode)=> {
+        node.text = this.treeNodeFormatter(node);
+        this.easyTree("update", node);
+    };
+
+
     componentDidMount() {
 
         let treeOptions = {
             //  data: здесь не заполнять !!!
+
+            formatter: this.treeNodeFormatter,
+
+            onExpand: (node: ITreeNode)=> {
+                this.refreshTreeNode(node);
+            },
+
+            onCollapse: (node: ITreeNode)=> {
+                this.refreshTreeNode(node);
+            },
+
             onSelect: (node: any)=> {
                 this.selectedObject = node.obj;
                 this.tabsInstance.setEditedObject(this.selectedObject);
