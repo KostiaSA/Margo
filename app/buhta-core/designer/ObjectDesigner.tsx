@@ -64,11 +64,11 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     }
 
     render(): JSX.Element {
-
+        console.log("render obj -designer")
         return (
             <Layout _class="Layout" fit={true} panels={[
-                            {_class:"LayoutPanel", title:"Состав объекта", region:"west",split:true, width:350, content:this.renderTree()},
-                            {_class:"LayoutPanel", title:"center", region:"center",content:this.renderPropertyEditor()},
+                            {_class:"LayoutPanel", title:"Состав объекта", region:"center",  content:this.renderTree()},
+                            {_class:"LayoutPanel", title:"Свойства", region:"east",width:350, split:true, content:this.renderPropertyEditor()},
             ]}/>
         )
 
@@ -128,7 +128,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     componentDidMount() {
 
         let treeOptions = {
-          //  data: здесь не заполнять !!!
+            //  data: здесь не заполнять !!!
             onSelect: (node: any)=> {
                 this.selectedObject = node.obj;
                 this.propertyEditorInstance.setEditedObject(this.selectedObject);

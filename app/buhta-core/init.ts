@@ -8,8 +8,15 @@ import {ArrayAttrEditor} from "./designer/editors/ArrayAttrEditor";
 import {ObjectAttrEditor} from "./designer/editors/ObjectAttrEditor";
 import {SqlIntDataType} from "./schema/SqlTable/SqlIntDataType";
 import {convertSchemas} from "../test_convert_tmc_to_schemaobject";
+import {test_create_new_schema_app} from "../test_create_new_schema_app";
+import {SchemaApp} from "./schema/SchemaApp/SchemaApp";
+import {SchemaFolder} from "./schema/SchemaFolder/SchemaFolder";
 
 export function init(){
+    registerClass(SchemaApp);
+
+    registerClass(SchemaFolder);
+
     registerClass(SqlTable);
     registerClass(SqlTableColumn);
     registerClass(SqlStringDataType);
@@ -22,3 +29,4 @@ export function init(){
 }
 
 let x= convertSchemas;
+let y=test_create_new_schema_app;

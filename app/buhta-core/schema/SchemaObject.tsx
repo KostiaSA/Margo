@@ -2,6 +2,8 @@ import {objectClasses} from "../objectClasses";
 import {IObjectDesignerFormat} from "../designer/ObjectDesignerFormat";
 import {StringAttrEditor} from "../designer/editors/StringAttrEditor";
 import {DateTimeAttrEditor} from "../designer/editors/DateTimeAttrEditor";
+import {getRandomString} from "../utils/getRandomString";
+import {getNewSchemaObjectId} from "./getNewSchemaObjectId";
 
 export interface IPersistentObject {
     _class: string;
@@ -95,8 +97,15 @@ export class PersistentObject<T extends IPersistentObject> {
 
 export class SchemaObject<T extends ISchemaObject> extends PersistentObject<T> {
 
-    createNew(): T {
-        throw "abstract error";
+    static createNew(): ISchemaObject {
+        return {
+            _id: getNewSchemaObjectId(),
+            _class: "",
+            name: "",
+            createDate: new Date(),
+            createUserId: getRandomString()
+        } as ISchemaObject;
+
     }
 
     prepareToSave() {
@@ -105,6 +114,7 @@ export class SchemaObject<T extends ISchemaObject> extends PersistentObject<T> {
 
     getDesignerFormat(): IObjectDesignerFormat {
         let ret = super.getDesignerFormat();
+        ret.attributes.push({_class: StringAttrEditor.getClassName(), attrName: "_id", title: "_id", isReadonly: true});
         ret.attributes.push({_class: StringAttrEditor.getClassName(), attrName: "name", title: "имя"});
         ret.attributes.push({_class: StringAttrEditor.getClassName(), attrName: "description", title: "описание"});
         ret.attributes.push({
@@ -113,6 +123,11 @@ export class SchemaObject<T extends ISchemaObject> extends PersistentObject<T> {
             title: "когда создан",
             isReadonly: true
         });
+
+        ret.getTitle = (obj: ISchemaObject)=> {
+            return obj.name;
+        };
+
         return ret;
     }
 

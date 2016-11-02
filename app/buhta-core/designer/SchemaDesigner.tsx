@@ -186,7 +186,7 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
 
                 </ObjectDesigner>
             ),
-            tabElement.find("#a"+node.obj._id)[0]
+            tabElement.find("#a"+node.obj._id).parent()[0]
         );
 
     };
