@@ -1,26 +1,36 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {Layout} from "../ui/Layout";
-import {IPersistentObject, PersistentObject} from "../schema/SchemaObject";
+import {IPersistentObject, PersistentObject, ISchemaObject} from "../schema/SchemaObject";
 import {getObjectInstanceOfType} from "../utils/getObjectInstanceOfType";
 import {IArrayAttrEditor, ArrayAttrEditor} from "./editors/ArrayAttrEditor";
 import {IAction} from "./Action";
 import {getRandomString} from "../utils/getRandomString";
 import {objectClasses} from "../objectClasses";
+import {IEasyTreeNode} from "../easyui/tree";
+import {getSchemaObjectCollection} from "../schema/getSchemaObjectCollection";
 
 export interface ISchemaDesignerProps {
-  //  editedObject: IPersistentObject;
+    //  editedObject: IPersistentObject;
 }
 
 
 let myId = Symbol();
+
+interface ITreeNode extends IEasyTreeNode {
+    key: string;
+    parentKey?: string;
+    obj: ISchemaObject;
+    sourceIndex: number;
+}
+
 
 export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
     constructor(props: any, context: any) {
         super(props, context);
         this.props = props;
         this.context = context;
-       // this.selectedObject = this.props.editedObject;
+        // this.selectedObject = this.props.editedObject;
     }
 
 
@@ -71,8 +81,8 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
     }
 
     treeContainer: any;
-    peContainer: any;
-    peInstance: any;
+    // peContainer: any;
+    // peInstance: any;
 
     // createTreeData_old(obj: IPersistentObject, id: string): any {
     //
@@ -123,84 +133,95 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
     componentDidMount() {
 
         let treeOptions = {
-          //  data: здесь не заполнять !!!
+            //  data: здесь не заполнять !!!
             onSelect: (node: any)=> {
                 this.selectedObject = node.obj;
                 this.tabsInstance.setEditedObject(this.selectedObject);
             },
-            onContextMenu: (e: any, node: any) => {
-                e.preventDefault();
-                this.easyTree("select", node.target);
-
-                let menuEl = $("#context-menu") as any;
-                menuEl.empty();
-
-                if (node.arrayAttrEditor && node.arrayAttrEditor.actions) {
-                    node.arrayAttrEditor.actions.forEach((act: IAction)=> {
-                        menuEl.menu("appendItem", {
-                            text: act.text,
-                            iconCls: act.iconCls,
-                            onclick: () => {
-                                if (act.onClick) {
-                                    let parentNode = this.easyTree("getParent", node.target);
-                                    let newObject = act.onClick(parentNode!.obj);
-                                    if (newObject)
-                                        newObject[myId] = getRandomString();
-                                    this.reloadTree(newObject[myId]);
-
-                                }
-                            }
-                        });
-
-                    }, this);
-                }
-
-                if (node.designerFormat && node.designerFormat.actions) {
-                    node.designerFormat.actions.forEach((act: IAction)=> {
-                        menuEl.menu("appendItem", {
-                            text: act.text,
-                            iconCls: act.iconCls,
-                            onclick: () => {
-                                if (act.onClick) {
-                                    let parentNode = this.easyTree("getParent", node.target);
-                                    let newObject = act.onClick(parentNode!.obj);
-                                    if (newObject) {
-                                        newObject[myId] = getRandomString();
-                                        this.reloadTree(newObject[myId]);
-                                    }
-                                    else
-                                        this.reloadTree();
-                                }
-                            }
-                        });
-
-                    }, this);
-                }
-
-                if (menuEl.children().length > 0) {
-                    menuEl.menu("show", {
-                        left: e.pageX,
-                        top: e.pageY
-                    });
-                }
-            }
+            // onContextMenu: (e: any, node: any) => {
+            //     e.preventDefault();
+            //     this.easyTree("select", node.target);
+            //
+            //     let menuEl = $("#context-menu") as any;
+            //     menuEl.empty();
+            //
+            //     if (node.arrayAttrEditor && node.arrayAttrEditor.actions) {
+            //         node.arrayAttrEditor.actions.forEach((act: IAction)=> {
+            //             menuEl.menu("appendItem", {
+            //                 text: act.text,
+            //                 iconCls: act.iconCls,
+            //                 onclick: () => {
+            //                     if (act.onClick) {
+            //                         let parentNode = this.easyTree("getParent", node.target);
+            //                         let newObject = act.onClick(parentNode!.obj);
+            //                         if (newObject)
+            //                             newObject[myId] = getRandomString();
+            //                         this.reloadTree(newObject[myId]);
+            //
+            //                     }
+            //                 }
+            //             });
+            //
+            //         }, this);
+            //     }
+            //
+            //     if (node.designerFormat && node.designerFormat.actions) {
+            //         node.designerFormat.actions.forEach((act: IAction)=> {
+            //             menuEl.menu("appendItem", {
+            //                 text: act.text,
+            //                 iconCls: act.iconCls,
+            //                 onclick: () => {
+            //                     if (act.onClick) {
+            //                         let parentNode = this.easyTree("getParent", node.target);
+            //                         let newObject = act.onClick(parentNode!.obj);
+            //                         if (newObject) {
+            //                             newObject[myId] = getRandomString();
+            //                             this.reloadTree(newObject[myId]);
+            //                         }
+            //                         else
+            //                             this.reloadTree();
+            //                     }
+            //                 }
+            //             });
+            //
+            //         }, this);
+            //     }
+            //
+            //     if (menuEl.children().length > 0) {
+            //         menuEl.menu("show", {
+            //             left: e.pageX,
+            //             top: e.pageY
+            //         });
+            //     }
+            // }
         };
 
         window.setTimeout(()=> {
             this.easyTree(treeOptions);
-            //this.easyTree("loadData", [this.createTreeData(this.props.editedObject, "root")]);
+            this.createTreeData()
+                .then(()=> {
+                    this.easyTree("loadData", this.nodes);
+                })
+                .catch((err:any)=>{
+                    throw err;
+                })
         }, 1);
+
+
 
     };
 
     renderTree(): JSX.Element {
-        return <div ref={(e)=>this.treeContainer=e}></div>;
+        console.log("renderTree()");
+        return <div ref={(e)=>{this.treeContainer=e; console.log(e);}}></div>;
     }
 
-    createTreeData() {
+    nodes: ITreeNode[];
 
-        let nodes = [];
-        let nodeList = {};
+    async createTreeData(): Promise<void> {
+
+        this.nodes = [];
+        let nodeList: any = {};
 
         // if (this.params.keyFieldName === undefined)
         //     throwError("GridTreeDataSourceFromArray: property 'keyFieldName' is undefined");
@@ -208,28 +229,41 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
         // if (this.params.parentKeyFieldName === undefined)
         //     throwError("GridTreeDataSourceFromArray: property 'parentKeyFieldName' is undefined");
         //
-        // this.arrayObj.forEach((dataSourceItem: TRow, index: number) => {
-        //     let node = new InternalTreeNode();
-        //     dataSourceItem.$$dataSourceTreeNode = node;
-        //     node.sourceIndex = index;
-        //     node.key = dataSourceItem[this.params.keyFieldName!];
-        //
-        //     if (node.key === undefined)
-        //         throwError("GridTreeDataSourceFromArray: key column '" + this.params.keyFieldName + "' not found");
-        //
-        //     if (node.key !== null && node.key.toString)
-        //         node.key = node.key.toString();
-        //
-        //     node.parentKey = dataSourceItem[this.params.parentKeyFieldName!];
-        //     if (node.parentKey === undefined)
-        //         throwError("GridTreeDataSourceFromArray: parent key column '" + this.params.parentKeyFieldName + "' not found");
-        //
-        //     if (node.parentKey !== null && node.parentKey.toString)
-        //         node.parentKey = node.parentKey.toString();
-        //
-        //     this.nodeList[node.key] = node;
-        //
-        // }, this);
+
+        let objs = await (await getSchemaObjectCollection()).find().toArray();
+
+        objs.forEach((dataSourceItem: ISchemaObject, index: number) => {
+            let node: ITreeNode = {
+                sourceIndex: index,
+                key: dataSourceItem._id!,
+                text: dataSourceItem.name,
+                parentKey: dataSourceItem.parentObjectId,
+                obj: dataSourceItem
+
+            };
+            this.nodes.push(node);
+            //dataSourceItem.$$dataSourceTreeNode = node;
+            nodeList[node.key] = node;
+            //node.sourceIndex = index;
+            //node.key = dataSourceItem[this.params.keyFieldName!];
+
+            //if (node.key === undefined)
+            //  throwError("GridTreeDataSourceFromArray: key column '" + this.params.keyFieldName + "' not found");
+
+            //if (node.key !== null && node.key.toString)
+            //  node.key = node.key.toString();
+
+            //node.parentKey = dataSourceItem[this.params.parentKeyFieldName!];
+            //if (node.parentKey === undefined)
+            //  throwError("GridTreeDataSourceFromArray: parent key column '" + this.params.parentKeyFieldName + "' not found");
+
+            //if (node.parentKey !== null && node.parentKey.toString)
+            //  node.parentKey = node.parentKey.toString();
+
+
+        }, this);
+
+       // console.log(this.nodes);
         //
         // for (let key in this.nodeList) {
         //     let node = this.nodeList[key];

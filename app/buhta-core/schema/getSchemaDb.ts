@@ -16,12 +16,4 @@ export async function getSchemaDb(): Promise<Db> {
         db = await MongoClient.connect(url, opt);
     }
     return db;
-//         var collection = db.collection('SchemaObject');
-//         collection.find().limit(1).toArray().then((a: any[])=> {
-//             console.log(i,a[0]);
-//         }).catch((err: any)=> {
-//             console.error(err);
-//
-//         });
-// //        db.close();
 }
