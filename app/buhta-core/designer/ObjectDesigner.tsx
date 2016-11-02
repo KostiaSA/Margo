@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {Layout} from "../ui/Layout";
-import {IPersistentObject, PersistentObject} from "../schema/SchemaObject";
+import {IPersistentObject, PersistentObject, ISchemaObject} from "../schema/SchemaObject";
 import {ObjectPropertEditor} from "./ObjectPropertyEditor";
 import {getObjectInstanceOfType} from "../utils/getObjectInstanceOfType";
 import {IArrayAttrEditor, ArrayAttrEditor} from "./editors/ArrayAttrEditor";
@@ -10,9 +10,10 @@ import {getRandomString} from "../utils/getRandomString";
 import {objectClasses} from "../objectClasses";
 import {EasyLinkButton} from "../easyui/linkbutton";
 import {Div} from "../easyui/Div";
+import {getSchema} from "../schema/Schema";
 
 export interface IObjectDesignerProps {
-    editedObject: IPersistentObject;
+    editedObject: ISchemaObject;
 }
 
 
@@ -32,6 +33,8 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
 
     handleObjectChange = ()=> {
         this.reloadTreeSelectedNode();
+        this.needToSave = true;
+        this.forceUpdateToolbar();
     }
 
     renderPropertyEditor(): JSX.Element {
@@ -208,12 +211,37 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
         return <div ref={(e)=>this.treeContainer=e}></div>;
     }
 
+
+    forceUpdateToolbar() {
+        this.layoutContainer.forceUpdateNorth(this.renderToolbar());
+    }
+
+    saveEditedObject = ()=> {
+        getSchema().saveObject(this.props.editedObject)
+            .then(()=> {
+                this.needToSave = false;
+                this.forceUpdateToolbar();
+            })
+            .catch((e: any)=> {
+                throw e;
+            });
+
+
+    }
+
+    needToSave: boolean;
+
     renderToolbar(): JSX.Element {
         return (
 
             <div>
-                <EasyLinkButton plain text={getRandomString()}
-                                onPress={()=>{console.log("click"); this.layoutContainer.forceUpdateNorth(this.renderToolbar()) }}/>
+                <EasyLinkButton
+                    plain
+                    iconCls="icon-disk-black"
+                    text={"сохранить" }
+                    disabled={!this.needToSave}
+                    onPress={this.saveEditedObject}
+                />
             </div>
 
         );

@@ -36,11 +36,23 @@ export class Layout extends React.Component<ILayoutProps,any> {
     layoutInstance: any;
 
     componentDidUpdate() {
-        console.log("componentDidUpdate()");
+        //console.log("componentDidUpdate()");
     }
 
     forceUpdateNorth(content:any){
         ReactDOM.render(content, this.layoutInstance.layout("panel", "north")[0]);
+    }
+    forceUpdateSouth(content:any){
+        ReactDOM.render(content, this.layoutInstance.layout("panel", "south")[0]);
+    }
+    forceUpdateWest(content:any){
+        ReactDOM.render(content, this.layoutInstance.layout("panel", "west")[0]);
+    }
+    forceUpdateEast(content:any){
+        ReactDOM.render(content, this.layoutInstance.layout("panel", "east")[0]);
+    }
+    forceUpdateCenter(content:any){
+        ReactDOM.render(content, this.layoutInstance.layout("panel", "center")[0]);
     }
 
     componentDidMount() {
