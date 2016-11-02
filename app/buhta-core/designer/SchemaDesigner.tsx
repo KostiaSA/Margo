@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as ReactDOM from "react-dom";
 import {Layout} from "../ui/Layout";
 import {IPersistentObject, PersistentObject, ISchemaObject} from "../schema/SchemaObject";
 import {getObjectInstanceOfType} from "../utils/getObjectInstanceOfType";
@@ -12,6 +13,7 @@ import {compareNumbers} from "../utils/compareNumbers";
 import {renderToStaticHtml} from "../utils/renderToStaticHtml";
 import {IEasyTabsPanel} from "../easyui/tabs";
 import isDivisibleBy = require("validator/lib/isDivisibleBy");
+import {ObjectDesigner} from "./ObjectDesigner";
 
 
 export interface ISchemaDesignerProps {
@@ -166,6 +168,27 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
     openTreeNode = (node: ITreeNode)=> {
         //node.text = this.treeNodeFormatter(node);
         //this.easyTree("update", node);
+
+        let tab: IEasyTabsPanel = {
+            title: node.obj.name,
+            closable: true,
+            selected: true,
+            content: renderToStaticHtml(<div id={"a"+node.obj._id}>это 222222222 инфо</div>)
+        };
+
+        let tabElement = this.easyTabs("add", tab);
+
+        console.log(tabElement.find("#a"+node.obj._id));
+
+        ReactDOM.render(
+            (
+                <ObjectDesigner editedObject={node.obj}>
+
+                </ObjectDesigner>
+            ),
+            tabElement.find("#a"+node.obj._id)[0]
+        );
+
     };
 
 
@@ -276,17 +299,17 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
 
 
         let tabsOptions = {
-            fit:true
+            fit: true
         };
         window.setTimeout(()=> {
             this.easyTabs(tabsOptions);
 
-            let tab:IEasyTabsPanel={
-                title:"info",
-                content:renderToStaticHtml(<div>это инфо</div>)
+            let tab: IEasyTabsPanel = {
+                title: "info",
+                content: renderToStaticHtml(<div>это инфо</div>)
             };
 
-            this.easyTabs("add",tab);
+            this.easyTabs("add", tab);
 
         }, 1);
 
