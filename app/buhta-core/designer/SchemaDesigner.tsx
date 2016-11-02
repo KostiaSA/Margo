@@ -10,6 +10,8 @@ import {IEasyTreeNode} from "../easyui/tree";
 import {getSchemaObjectCollection} from "../schema/getSchemaObjectCollection";
 import {compareNumbers} from "../utils/compareNumbers";
 import {renderToStaticHtml} from "../utils/renderToStaticHtml";
+import {IEasyTabsPanel} from "../easyui/tabs";
+import isDivisibleBy = require("validator/lib/isDivisibleBy");
 
 
 export interface ISchemaDesignerProps {
@@ -46,9 +48,8 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
         this.reloadTreeSelectedNode();
     }
 
-
     easyTabs = (arg1: any, arg2?: any): any=> {
-        return ($(this.tabsContainer) as any).tree(arg1, arg2);
+        return ($(this.tabsContainer) as any).tabs(arg1, arg2);
     }
 
     easyTree = (arg1: any, arg2?: any): any=> {
@@ -279,6 +280,14 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
         };
         window.setTimeout(()=> {
             this.easyTabs(tabsOptions);
+
+            let tab:IEasyTabsPanel={
+                title:"info",
+                content:renderToStaticHtml(<div>это инфо</div>)
+            };
+
+            this.easyTabs("add",tab);
+
         }, 1);
 
 
