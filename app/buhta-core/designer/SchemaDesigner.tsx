@@ -9,6 +9,7 @@ import {getRandomString} from "../utils/getRandomString";
 import {objectClasses} from "../objectClasses";
 import {IEasyTreeNode} from "../easyui/tree";
 import {getSchemaObjectCollection} from "../schema/getSchemaObjectCollection";
+import {compareNumbers} from "../utils/compareNumbers";
 
 export interface ISchemaDesignerProps {
     //  editedObject: IPersistentObject;
@@ -22,6 +23,9 @@ interface ITreeNode extends IEasyTreeNode {
     parentKey?: string;
     obj: ISchemaObject;
     sourceIndex: number;
+    parent?: ITreeNode;
+    level?: number;
+    children?: ITreeNode[]
 }
 
 
@@ -198,15 +202,14 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
 
         window.setTimeout(()=> {
             this.easyTree(treeOptions);
-            this.createTreeData()
+            this.createTreeData(1)
                 .then(()=> {
                     this.easyTree("loadData", this.nodes);
                 })
-                .catch((err:any)=>{
+                .catch((err: any)=> {
                     throw err;
                 })
         }, 1);
-
 
 
     };
@@ -218,17 +221,10 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
 
     nodes: ITreeNode[];
 
-    async createTreeData(): Promise<void> {
+    async createTreeData(autoExpandNodesToLevel?: number): Promise<void> {
 
         this.nodes = [];
         let nodeList: any = {};
-
-        // if (this.params.keyFieldName === undefined)
-        //     throwError("GridTreeDataSourceFromArray: property 'keyFieldName' is undefined");
-        //
-        // if (this.params.parentKeyFieldName === undefined)
-        //     throwError("GridTreeDataSourceFromArray: property 'parentKeyFieldName' is undefined");
-        //
 
         let objs = await (await getSchemaObjectCollection()).find().toArray();
 
@@ -241,92 +237,68 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
                 obj: dataSourceItem
 
             };
-            this.nodes.push(node);
-            //dataSourceItem.$$dataSourceTreeNode = node;
             nodeList[node.key] = node;
-            //node.sourceIndex = index;
-            //node.key = dataSourceItem[this.params.keyFieldName!];
-
-            //if (node.key === undefined)
-            //  throwError("GridTreeDataSourceFromArray: key column '" + this.params.keyFieldName + "' not found");
-
-            //if (node.key !== null && node.key.toString)
-            //  node.key = node.key.toString();
-
-            //node.parentKey = dataSourceItem[this.params.parentKeyFieldName!];
-            //if (node.parentKey === undefined)
-            //  throwError("GridTreeDataSourceFromArray: parent key column '" + this.params.parentKeyFieldName + "' not found");
-
-            //if (node.parentKey !== null && node.parentKey.toString)
-            //  node.parentKey = node.parentKey.toString();
-
-
         }, this);
 
-       // console.log(this.nodes);
-        //
-        // for (let key in this.nodeList) {
-        //     let node = this.nodeList[key];
-        //     if (node.parentKey !== undefined) {
-        //         let parentNode = this.nodeList[node.parentKey];
-        //         if (parentNode !== undefined) {
-        //             if ((node  as InternalTreeNode).parent !== undefined)
-        //                 throwError("GridTreeDataSourceFromArray: internal error");
-        //             (node  as InternalTreeNode).parent = parentNode;
-        //             (parentNode as InternalTreeNode).children.push(node);
-        //         }
-        //     }
-        // }
-        //
-        // for (let key in this.nodeList) {
-        //     let node = this.nodeList[key];
-        //     if (node.parentKey === null) {
-        //         this.nodes.push(node);
-        //     }
-        // }
-        //
-        // // сортировка children и проставление level
-        // let sortNodes = (nodes: InternalTreeNode[]): InternalTreeNode[] => {
-        //     if (this.params.positionFieldName !== undefined) {
-        //         return nodes.sort((a: InternalTreeNode, b: InternalTreeNode) => {
-        //
-        //             let aa = this.arrayObj[a.sourceIndex][this.params.positionFieldName!];
-        //             if (aa === undefined)
-        //                 throwError("GridTreeDataSourceFromArray: position column '" + this.params.positionFieldName + "' not found");
-        //             if (!_.isNumber(aa))
-        //                 throwError("GridTreeDataSourceFromArray: position column '" + this.params.positionFieldName + "' must be a number");
-        //
-        //             let bb = this.arrayObj[b.sourceIndex][this.params.positionFieldName!];
-        //             if (bb === undefined)
-        //                 throwError("GridTreeDataSourceFromArray: position column '" + this.params.positionFieldName + "' not found");
-        //             if (!_.isNumber(bb))
-        //                 throwError("GridTreeDataSourceFromArray: position column '" + this.params.positionFieldName + "' must be a number");
-        //
-        //             return numberCompare(aa, bb);
-        //         });
-        //     }
-        //     else {
-        //         return nodes.sort((a: InternalTreeNode, b: InternalTreeNode) => numberCompare(a.sourceIndex, b.sourceIndex));
-        //     }
-        // };
-        //
-        //
-        // let processNode = (node: InternalTreeNode, level: number) => {
-        //     node.level = level;
-        //     node.expanded = this.params.autoExpandNodesToLevel !== undefined && node.level < this.params.autoExpandNodesToLevel;
-        //     node.children = sortNodes(node.children);
-        //     node.children.forEach((node: InternalTreeNode) => {
-        //         processNode(node, level + 1);
-        //     }, this);
-        // };
-        //
-        // this.nodes.forEach((node: InternalTreeNode) => {
-        //     processNode(node, 0);
-        // }, this);
-        //
-        // this.nodes = sortNodes(this.nodes);
-        // //this.state.nodes = this.state.nodes.sort((a, b) => numberCompare(a.sourceIndex, b.sourceIndex));
+        for (let key in nodeList) {
+            let node = nodeList[key] as ITreeNode;
+            if (node.parentKey !== undefined) {
+                let parentNode = nodeList[node.parentKey];
+                if (parentNode !== undefined) {
+                    if (node.parent)
+                        throw "internal error";
+                    node.parent = parentNode;
+                    if (!parentNode.children)
+                        parentNode.children = [];
+                    parentNode.children.push(node);
+                }
+            }
+        }
 
+        for (let key in nodeList) {
+            let node = nodeList[key] as ITreeNode;
+            if (!node.parentKey || node.parentKey === null) {
+                this.nodes.push(node);
+            }
+        }
+
+        // сортировка children и проставление level
+        let sortNodes = (nodes?: ITreeNode[]): ITreeNode[] | undefined => {
+            if (!nodes || nodes.length === 0)
+                return undefined;
+            else
+                return nodes.sort((a: ITreeNode, b: ITreeNode) => {
+                    let aa = a.obj.position || a.sourceIndex;
+                    let bb = b.obj.position || b.sourceIndex;
+                    return compareNumbers(aa, bb);
+                });
+        };
+
+        let processNode = (node: ITreeNode, level: number) => {
+            node.level = level;
+
+            let expanded = autoExpandNodesToLevel !== undefined && node.level < autoExpandNodesToLevel;
+            if (expanded)
+                node.state = "opened";
+            else
+                node.state = "closed";
+
+
+            node.children = sortNodes(node.children);
+            if (node.children) {
+                node.children.forEach((node: ITreeNode) => {
+                    processNode(node, level + 1);
+                }, this);
+            }
+            else
+                node.state = undefined;
+        };
+
+        this.nodes.forEach((node: ITreeNode) => {
+            processNode(node, 0);
+        }, this);
+
+        this.nodes = sortNodes(this.nodes)!;
     }
 
 }

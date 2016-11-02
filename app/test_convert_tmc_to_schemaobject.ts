@@ -69,6 +69,9 @@ async function convertMikDocs_internal(db: Db) {
 
     for (let i = 0; i < recordset.length; i++) {
 
+        if (recordset[i].parentObjectId === "0")
+            recordset[i].parentObjectId = null;
+
         await collection.insertOne(recordset[i]);
 
         counter++;
