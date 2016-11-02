@@ -67,6 +67,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
         console.log("render obj -designer")
         return (
             <Layout _class="Layout" fit={true} panels={[
+                            {_class:"LayoutPanel", region:"north",  content:this.renderToolbar(), height:32},
                             {_class:"LayoutPanel", title:"Состав объекта", region:"center",  content:this.renderTree()},
                             {_class:"LayoutPanel", title:"Свойства", region:"east",width:350, split:true, content:this.renderPropertyEditor()},
             ]}/>
@@ -75,6 +76,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
 
     }
 
+    toolbarContainer: any;
     treeContainer: any;
     peContainer: any;
     peInstance: any;
@@ -200,6 +202,13 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
 
     renderTree(): JSX.Element {
         return <div ref={(e)=>this.treeContainer=e}></div>;
+    }
+
+    renderToolbar(): JSX.Element {
+        return (
+            <div>
+                это тоолбар
+            </div>);
     }
 
 }
