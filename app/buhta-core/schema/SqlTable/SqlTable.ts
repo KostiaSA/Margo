@@ -26,13 +26,11 @@ export class SqlTable extends SchemaObject<ISqlTable> {
     // }
 
     static createNew(): ISqlTable {
-        return {
-            _class: this.getClassName(),
-            name: "НоваяТаблица",
-            columns: [],
-            createDate: new Date(),
-            createUserId: getRandomString()
-        } as ISqlTable;
+        let obj: ISqlTable = SchemaObject.createNew() as any;
+        obj._class = this.getClassName();
+        obj.name = "НоваяТаблица";
+        obj.columns = [];
+        return obj;
     }
 
     getDesignerFormat(): IObjectDesignerFormat {
@@ -43,12 +41,14 @@ export class SqlTable extends SchemaObject<ISqlTable> {
             attrName: "columns",
             title: "колонки",
             _class: ArrayAttrEditor.getClassName(),
-            actions:[
-                {_class:Action.getClassName(), text:"добавить новую колонку", onClick:()=>{
-                    let newCol=SqlTableColumn.createNew();
+            actions: [
+                {
+                    _class: Action.getClassName(), text: "добавить новую колонку", onClick: ()=> {
+                    let newCol = SqlTableColumn.createNew();
                     this.obj.columns.push(newCol);
                     return newCol;
-                }}
+                }
+                }
             ]
         };
         ret.arrays.push(columnsEditor);

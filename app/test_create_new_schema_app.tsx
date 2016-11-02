@@ -21,7 +21,7 @@ export async function test_create_new_schema_app() {
 
         let table = SqlTable.createNew();
         table.parentObjectId = folder._id;
-        table.name="Организация";
+        table.name="Организация1";
 
         let col = SqlTableColumn.createNew();
         col.name = "номер";
