@@ -28,7 +28,13 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
         this.props = props;
         this.context = context;
         this.selectedObject = this.props.editedObject;
+
+
+
     }
+
+    observableEditedObject:any;
+    editedObjectAsJson: string;
 
     @observable needToSave: boolean;
     @observable selectedObject: IPersistentObject;
@@ -36,9 +42,8 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     propertyEditorInstance: ObjectPropertyEditor;
 
     handleObjectChange = ()=> {
-        this.reloadTreeSelectedNode();
-        this.needToSave = true;
-        this.forceUpdateToolbar();
+        //this.reloadTreeSelectedNode();
+        //this.needToSave = this.editedObjectAsJson !== JSON.stringify(this.props.editedObject);
     }
 
     renderPropertyEditor(): JSX.Element {
@@ -80,17 +85,12 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
             <Layout ref={(e)=>this.layoutContainer=e}
                     _class="Layout"
                     fit={true}
-                    panels={[
-                              //{_class:"LayoutPanel", region:"north",  content:<div>?</div>/*this.renderToolbar()*/, height:32},
-                              {_class:"LayoutPanel", title:"Состав объекта", region:"center",  content:this.renderTree()},
-                              {_class:"LayoutPanel", title:"Свойства", region:"east",width:350, split:true, content:this.renderPropertyEditor()},
-                           ]}
-                    north={{_class:"LayoutPanel", height:62}}
-                    northContent={this.renderToolbar()}
+                    north={{_class:"LayoutPanel", height:62, content:this.renderToolbar()}}
+                    center={{_class:"LayoutPanel", title:"Состав объекта", content:this.renderTree()}}
+                    east={{_class:"LayoutPanel", title:"Свойства", width:350, split:true, content:this.renderPropertyEditor()}}
+
             />
         )
-
-
     }
 
     toolbarContainer: any;
@@ -139,12 +139,12 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
         };
         if (obj[myId])
             root.id = obj[myId];
-
         return root;
     }
 
-
     componentDidMount() {
+
+
 
         let treeOptions = {
             //  data: здесь не заполнять !!!
@@ -213,6 +213,18 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
         window.setTimeout(()=> {
             this.easyTree(treeOptions);
             this.easyTree("loadData", [this.createTreeData(this.props.editedObject, "root")]);
+
+            this.editedObjectAsJson = JSON.stringify(this.props.editedObject);
+            this.observableEditedObject=observable(this.props.editedObject);
+
+            autorun(() => {
+                console.log("observableEditedObject");
+                this.reloadTreeSelectedNode();
+                ?this.needToSave = this.editedObjectAsJson !== JSON.stringify(this.props.editedObject);
+
+            });
+
+
         }, 1);
 
         // console.log("autorun-987-start:")
@@ -227,24 +239,20 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
         return <div ref={(e)=>this.treeContainer=e}></div>;
     }
 
-
-    forceUpdateToolbar() {
-        //this.layoutContainer.forceUpdateNorth(this.renderToolbar());
-    }
+    // forceUpdateToolbar() {
+    //     //this.layoutContainer.forceUpdateNorth(this.renderToolbar());
+    // }
 
     saveEditedObject = ()=> {
         getSchema().saveObject(this.props.editedObject)
             .then(()=> {
                 this.needToSave = false;
-                this.forceUpdateToolbar();
+                //this.forceUpdateToolbar();
             })
             .catch((e: any)=> {
                 throw e;
             });
-
-
     }
-
 
 
     renderToolbar(): JSX.Element {

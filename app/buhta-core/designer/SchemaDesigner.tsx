@@ -76,10 +76,10 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
     render(): JSX.Element {
 
         return (
-            <Layout _class="Layout" fit={true} panels={[
-                            {_class:"LayoutPanel", title:"Схема приложения", region:"west",split:true, width:450, content:this.renderTree()},
-                            {_class:"LayoutPanel", region:"center",content:this.renderTabs()},
-            ]}/>
+            <Layout _class="Layout" fit={true}
+                            west={{_class:"LayoutPanel", title:"Схема приложения", split:true, width:450, content:this.renderTree()}}
+                            center={{_class:"LayoutPanel", region:"center",content:this.renderTabs()}}
+            />
         )
 
 

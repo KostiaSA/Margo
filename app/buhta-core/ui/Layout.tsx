@@ -5,7 +5,7 @@ import {IPersistentObject} from "../schema/SchemaObject";
 
 
 export interface  ILayoutPanel extends IPersistentObject {
-    region?: "center" | "north" | "west" | "south" | "east";
+  //  region?: "center" | "north" | "west" | "south" | "east";
     title?: string;
     width?: number;
     split?: boolean;
@@ -23,8 +23,11 @@ export interface  ILayoutProps extends IPersistentObject {
     fit?: boolean;
     fitToBody?: boolean;
     north?: ILayoutPanel;
-    northContent?: React.ReactElement<any>;
-    panels: ILayoutPanel[];
+    south?: ILayoutPanel;
+    west?: ILayoutPanel;
+    east?: ILayoutPanel;
+    center?: ILayoutPanel;
+    //panels: ILayoutPanel[];
 }
 
 export class Layout extends React.Component<ILayoutProps,any> {
@@ -39,10 +42,10 @@ export class Layout extends React.Component<ILayoutProps,any> {
 
     componentDidUpdate(prevProps: ILayoutProps) {
         console.log("componentDidUpdate: north!!!");
-        if (prevProps.northContent !== this.props.northContent) {
+        if (prevProps.north!.content !== this.props.north!.content) {
             console.log("componentDidUpdate: north");
             if (this.layoutInstance)
-                ReactDOM.render(this.props.northContent!, this.layoutInstance.layout("panel", "north")[0]);
+                ReactDOM.render(this.props.north!.content!, this.layoutInstance.layout("panel", "north")[0]);
         }
     }
 
@@ -88,36 +91,44 @@ export class Layout extends React.Component<ILayoutProps,any> {
                 this.layoutContainer = document.body;
 
 
-            this.props.panels.forEach((item: ILayoutPanel)=> {
-                this.layoutInstance.layout('add', {
-                    region: item.region,
-                    title: item.title,
-                    width: item.width,
-                    height: item.height,
-                    split: item.split,
-                    minWidth: item.minWidth,
-                    minHeight: item.minHeight,
-                    maxWidth: item.maxWidth,
-                    maxHeight: item.maxHeight,
-                });
-                ReactDOM.render(item.content!, this.layoutInstance.layout("panel", item.region)[0]);
-            });
+            // this.props.panels.forEach((item: ILayoutPanel)=> {
+            //     this.layoutInstance.layout('add', {
+            //         region: item.region,
+            //         title: item.title,
+            //         width: item.width,
+            //         height: item.height,
+            //         split: item.split,
+            //         minWidth: item.minWidth,
+            //         minHeight: item.minHeight,
+            //         maxWidth: item.maxWidth,
+            //         maxHeight: item.maxHeight,
+            //     });
+            //     ReactDOM.render(item.content!, this.layoutInstance.layout("panel", item.region)[0]);
+            // });
 
-            let item = this.props.north;
-            if (item) {
-                this.layoutInstance.layout('add', {
-                    region: "north",
-                    title: item.title,
-                    width: item.width,
-                    height: item.height,
-                    split: item.split,
-                    minWidth: item.minWidth,
-                    minHeight: item.minHeight,
-                    maxWidth: item.maxWidth,
-                    maxHeight: item.maxHeight,
-                });
-                ReactDOM.render(this.props.northContent!, this.layoutInstance.layout("panel", "north")[0]);
+            let renderPanel=(place:string)=> {
+                let item = this.props[place] as ILayoutPanel;
+                if (item) {
+                    this.layoutInstance.layout('add', {
+                        region: place,
+                        title: item.title,
+                        width: item.width,
+                        height: item.height,
+                        split: item.split,
+                        minWidth: item.minWidth,
+                        minHeight: item.minHeight,
+                        maxWidth: item.maxWidth,
+                        maxHeight: item.maxHeight,
+                    });
+                    ReactDOM.render(this.props[place]!.content!, this.layoutInstance.layout("panel", place)[0]);
+                }
             }
+            renderPanel("north");
+            renderPanel("south");
+            renderPanel("west");
+            renderPanel("east");
+            renderPanel("center");
+
 
         }, 1);
 
