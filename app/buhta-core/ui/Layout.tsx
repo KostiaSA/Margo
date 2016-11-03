@@ -156,7 +156,7 @@ export class Layout extends React.Component<ILayoutProps,any> {
 
 
     render(): JSX.Element {
-        console.log("render Layout");
+        //console.log("render Layout");
         return (
             <div ref={(e)=>this.layoutContainer=e}></div>
         )
