@@ -189,7 +189,8 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
         window.setTimeout(()=> {
             this.easyTree(treeOptions);
             this.easyTree("loadData", [this.createTreeData(this.props.editedObject, "root")]);
-
+            var nodeToFocus = this.easyTree("getRoot");
+            this.easyTree("select", nodeToFocus.target);
         }, 1);
 
 
