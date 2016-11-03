@@ -1,10 +1,10 @@
+import * as React from "react";
 import {AttrEditor} from "./AttrEditor";
 import {IPersistentObject, PersistentObject} from "../../schema/SchemaObject";
-import {getObjectOf} from "../../utils/getObjectOf";
-import {getObjectInstanceOfType} from "../../utils/getObjectInstanceOfType";
-import {getObjectHandlerOf} from "../../utils/getObjectHandlerOf";
-import {getObjectOfClassName} from "../../utils/getObjectOfClassName";
 import {IAttrEditor, IAttrFormatter, IEasyPropertyGridRow} from "../ObjectPropertyEditor";
+import {getRandomString} from "../../utils/getRandomString";
+import {renderToStaticHtml} from "../../utils/renderToStaticHtml";
+import {getSchema} from "../../schema/Schema";
 
 export interface ISchemaObjectLookupItem {
     _id: string;
@@ -59,7 +59,7 @@ export class SchemaObjectAttrEditor extends AttrEditor<ISchemaObjectAttrEditor> 
         };
     }
 
-//     getFormatter(): IAttrFormatter {
+    getFormatter(): IAttrFormatter {
 //         let formatter = super.getFormatter();
 // //         if (!formatter) {
 // //             formatter = (value: any, row: IEasyPropertyGridRow)=> {
@@ -67,8 +67,28 @@ export class SchemaObjectAttrEditor extends AttrEditor<ISchemaObjectAttrEditor> 
 // //                 return (getObjectHandlerOf(row.valueObj) as any).getClassTitle();
 // //             };
 // //         }
-//         return formatter;
-//     }
+        return (value: any, row: IEasyPropertyGridRow)=> {
+            let divId="a"+getRandomString();
+          //  console.log("forma", row);
+
+            if (!value)
+                return "<нет значения>";
+            else {
+                getSchema().getObjectName(value)
+                    .then((name:string)=>{
+                       console.log(name);
+                       $("#"+divId).html(renderToStaticHtml(<div id={divId}>{name}</div>));
+                    })
+                    .catch((error:any)=>{
+                        console.log(error);
+                        $("#"+divId).html(renderToStaticHtml(<div id={divId}>{"<ошибка>"}</div>));
+
+                    });
+
+                return renderToStaticHtml(<div id={divId}>...</div>);
+            }
+        };
+    }
 
 
     getIsNeedReloadPropertyEditor(): boolean {

@@ -5,6 +5,7 @@ import {sleep} from "../utils/sleep";
 import {getInstantPromise} from "../utils/getInstantPromise";
 import {objectClasses} from "../objectClasses";
 import {getRandomString} from "../utils/getRandomString";
+import {getInstantPromiseError} from "../utils/getInstantPromiseError";
 
 
 let defaultSchema: Schema;
@@ -50,6 +51,28 @@ export class Schema {
         delete this.objects_cache[id];
     }
 
+//     let objs = await (await getSchema().getSchemaObjectCollection())
+// .find({},
+//     {
+//         parentObjectId: 1,
+//         name: 1
+//     })
+// .toArray();
+
+    async getObjectName(id: string): Promise<string> {
+        let coll = await this.getSchemaObjectCollection();
+        let objs = await coll.find(
+            {_id: id},
+            {name: 1})
+            .toArray();
+
+        if (!objs[0])
+            return getInstantPromiseError<string>(`schema object "${id}" not found`);
+        else
+            return getInstantPromise(objs[0].name);
+    }
+
+
     async getSchemaObjectCollection(): Promise<Collection> {
         let db = await this.getMongoDb();
         return db.collection('SchemaObject');
@@ -90,7 +113,7 @@ export class Schema {
 
         if (result.upsertedCount + result.modifiedCount !== 1)
             throw `error saving SchemaObject (_id=${obj._id})`;
-        this.objects_cache[obj._id]=obj;
+        this.objects_cache[obj._id] = obj;
         return getInstantPromise<void>(undefined);
     }
 
