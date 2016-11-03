@@ -10,7 +10,13 @@ import {SchemaComponent} from "./buhta-core/schema/SchemaComponent/SchemaCompone
 export async function test_create_new_schema_app() {
     try {
         let so = await getSchema().getSchemaObjectCollection();
-        await so.drop();
+        try {
+            await so.drop();
+        }
+        catch (e)
+        {
+
+        }
 
         let app = SchemaApp.createNew();
         so.insertOne(app);

@@ -11,7 +11,9 @@ let defaultSchema: Schema;
 
 export function getSchema(): Schema {
     if (!defaultSchema) {
-        defaultSchema = new Schema("mongodb://green/mik");
+        //defaultSchema = new Schema("mongodb://green/mik");
+        defaultSchema = new Schema("mongodb://KostiaSA:sonyk795@ds061206.mlab.com:61206/margo");
+
     }
     return defaultSchema;
 }

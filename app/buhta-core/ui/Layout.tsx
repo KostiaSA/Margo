@@ -95,7 +95,6 @@ export class Layout extends React.Component<ILayoutProps,any> {
         //     height: this.props.height,
         // };
 
-        console.log("@@@@@@",this.props);
         window.setTimeout(()=> {
             this.layoutInstance = ($(this.layoutContainer) as any).layout(this.props);
 

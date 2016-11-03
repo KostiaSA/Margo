@@ -223,7 +223,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     }
 
     renderPropertyEditor(): JSX.Element {
-        console.log("renderPropertyEditor");
+        //console.log("renderPropertyEditor");
         return (
             <ObjectPropertyEditor
                 ref={(e)=>this.propertyEditorInstance=e}

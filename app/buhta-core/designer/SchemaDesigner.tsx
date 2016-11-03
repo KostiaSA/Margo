@@ -219,7 +219,7 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
                     text: "открыть",
                     //iconCls: act.iconCls,
                     onclick: () => {
-                        console.log("open", node);
+                        //console.log("open", node);
                         this.openTreeNode(node);
                         // if (act.onClick) {
                         //     let parentNode = this.easyTree("getParent", node.target);
