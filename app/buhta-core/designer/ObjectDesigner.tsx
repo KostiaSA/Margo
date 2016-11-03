@@ -258,9 +258,10 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
             <Layout ref={(e)=>this.layoutContainer=e}
                     _class="Layout"
                     fit={true}
-                    north={{_class:"LayoutPanel", height:62, content:this.renderToolbar()}}
-                    center={{_class:"LayoutPanel", title:"Состав объекта", content:this.renderTree()}}
-                    east={{_class:"LayoutPanel", title:"Свойства", width:350, split:true, content:this.renderPropertyEditor()}}
+                    border={false}
+                    north={{_class:"LayoutPanel", height:62, border:false, content:this.renderToolbar()}}
+                    center={{_class:"LayoutPanel", /*title:"Состав объекта",*/ border:true, content:this.renderTree()}}
+                    east={{_class:"LayoutPanel", /*title:"Свойства",*/ border:true, width:350, split:true, content:this.renderPropertyEditor()}}
 
             />
         )

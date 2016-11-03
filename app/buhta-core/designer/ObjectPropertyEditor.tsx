@@ -18,9 +18,9 @@ export interface IAttrFormatter {
 
 export interface IAttrEditor extends IPersistentObject {
     attrName: string;
-    title?: string;
+    attrTitle?: string;
+    attrGroup: string;
     //editor: IAttrEditor;
-    editorGroup?: string;
     isReadonly?: boolean;
     formatter?: IAttrFormatter;
 }
@@ -79,9 +79,9 @@ export class ObjectPropertyEditor extends React.Component<IObjectPropertEditorPr
             let editorInstance = getObjectInstanceOfType(editorHandler, [item]) as AttrEditor<IAttrEditor>;
 
             let row: IEasyPropertyGridRow = {
-                name: level + (item.title || item.attrName),
+                name: level + (item.attrTitle || item.attrName),
                 value: editorInstance.getAttrValue(obj),
-                group: item.editorGroup,
+                group: item.attrGroup,
                 editor: editorInstance.getEasyEditor(obj),
                 editorInstance: editorInstance,
                 formatter: editorInstance.getFormatter(),
@@ -124,6 +124,9 @@ export class ObjectPropertyEditor extends React.Component<IObjectPropertEditorPr
 
         let peOptions = $.fn.propertygrid.defaults;
         peOptions.fit = true;
+        peOptions.showHeader = false;
+        peOptions.border = false;
+        peOptions.showGroup = true;
         peOptions.data = this.getObjectEditors(this.editedObject, "");
         peOptions.onBeforeEdit = (index: number, row: IEasyPropertyGridRow): boolean => {
             return !row.editorInstance.getIsReadonly();  // делаем cancel

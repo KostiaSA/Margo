@@ -15,7 +15,7 @@ export class AttrEditor<T extends IAttrEditor> {
     }
 
     getTitle(): string {
-        return this.edt.title || this.edt.attrName;
+        return this.edt.attrTitle || this.edt.attrName;
     }
 
     getAttrValue(editedObj: IPersistentObject): any {

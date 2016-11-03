@@ -114,13 +114,31 @@ export class SchemaObject<T extends ISchemaObject> extends PersistentObject<T> {
 
     getDesignerFormat(): IObjectDesignerFormat {
         let ret = super.getDesignerFormat();
-        ret.attributes.push({_class: StringAttrEditor.getClassName(), attrName: "_id", title: "_id", isReadonly: true});
-        ret.attributes.push({_class: StringAttrEditor.getClassName(), attrName: "name", title: "имя"});
-        ret.attributes.push({_class: StringAttrEditor.getClassName(), attrName: "description", title: "описание"});
+        ret.attributes.push({
+            _class: StringAttrEditor.getClassName(),
+            attrGroup: "объект схемы",
+            attrName: "_id",
+            attrTitle: "_id",
+            isReadonly: true
+        });
+        ret.attributes.push({
+            _class: StringAttrEditor.getClassName(),
+            attrGroup: "объект схемы",
+            attrName: "name",
+            attrTitle: "имя"
+        });
+        ret.attributes.push({
+            _class: StringAttrEditor.getClassName(),
+            attrGroup: "объект схемы",
+            attrName: "description",
+            attrTitle: "описание"
+        });
+
         ret.attributes.push({
             _class: DateTimeAttrEditor.getClassName(),
+            attrGroup: "инфо",
             attrName: "createDate",
-            title: "когда создан",
+            attrTitle: "когда создан",
             isReadonly: true
         });
 

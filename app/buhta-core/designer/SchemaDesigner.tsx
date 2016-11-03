@@ -75,18 +75,6 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
         // }
     }
 
-    render(): JSX.Element {
-
-        return (
-            <Layout _class="Layout" fit={true}
-                    west={{_class:"LayoutPanel", title:"Схема приложения", split:true, width:450, content:this.renderTree()}}
-                    center={{_class:"LayoutPanel", region:"center",content:this.renderTabs()}}
-            />
-        )
-
-
-    }
-
     treeContainer: any;
     tabsContainer: any;
 
@@ -308,13 +296,15 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
 
 
         let tabsOptions = {
-            fit: true
+            fit: true,
+            border: false
         };
         window.setTimeout(()=> {
             this.easyTabs(tabsOptions);
 
             let tab: IEasyTabsPanel = {
                 title: "info",
+                border:false,
                 content: renderToStaticHtml(<div>это инфо</div>)
             };
 
@@ -420,6 +410,19 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
 
         this.nodes = sortNodes(this.nodes)!;
     }
+
+    render(): JSX.Element {
+
+        return (
+            <Layout _class="Layout" fit={true} border={false}
+                    west={{_class:"LayoutPanel", title:"Схема приложения", split:true, width:450, content:this.renderTree()}}
+                    center={{_class:"LayoutPanel", region:"center",content:this.renderTabs()}}
+            />
+        )
+
+
+    }
+
 
 }
 

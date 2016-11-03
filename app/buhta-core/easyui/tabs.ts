@@ -35,6 +35,7 @@ export interface IEasyTabsPanel {
     iconCls?: string;
     width?: number;
     height?: number;
+    border?:boolean;
     collapsible?: boolean;
     closable?: boolean;
     selected?: boolean;

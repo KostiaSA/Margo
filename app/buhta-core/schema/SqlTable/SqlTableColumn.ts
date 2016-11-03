@@ -36,12 +36,23 @@ export class SqlTableColumn extends PersistentObject<ISqlTableColumn> {
 
     getDesignerFormat(): IObjectDesignerFormat {
         let ret = super.getDesignerFormat();
-        ret.attributes.push({attrName: "name", title: "имя колонки", _class: StringAttrEditor.getClassName()});
-        ret.attributes.push({attrName: "description", title: "описание", _class: StringAttrEditor.getClassName()});
+        ret.attributes.push({
+            attrGroup: "колонка",
+            attrName: "name",
+            attrTitle: "имя колонки",
+            _class: StringAttrEditor.getClassName()
+        });
+        ret.attributes.push({
+            attrGroup: "колонка",
+            attrName: "description",
+            attrTitle: "описание",
+            _class: StringAttrEditor.getClassName()
+        });
 
         let sqlTypeEditor: IObjectAttrEditor = {
+            attrGroup: "колонка",
             attrName: "dataType",
-            title: "тип данных",
+            attrTitle: "тип данных",
             _class: ObjectAttrEditor.getClassName(),
             getObjectClassesList: (): Function[] => {
                 return getClassesInheritsFrom(SqlDataType);
@@ -63,7 +74,7 @@ export class SqlTableColumn extends PersistentObject<ISqlTableColumn> {
                 onClick: (parentArray: any[])=> {
                     //console.log(parentArray);
 
-                    let delItemIndex=-1;
+                    let delItemIndex = -1;
                     if (parentArray) {
                         delItemIndex = parentArray.indexOf(this.obj);
                         if (delItemIndex < 0)

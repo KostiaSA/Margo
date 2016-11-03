@@ -2,9 +2,10 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {setTimeout} from "timers";
 import {IPersistentObject} from "../schema/SchemaObject";
+import {IEasyPanel, IEasyBasePanel} from "../easyui/panel";
 
 
-export interface  ILayoutPanel extends IPersistentObject {
+export interface  ILayoutPanel extends IEasyBasePanel {
     //  region?: "center" | "north" | "west" | "south" | "east";
     title?: string;
     width?: number;
@@ -17,7 +18,7 @@ export interface  ILayoutPanel extends IPersistentObject {
     content?: React.ReactElement<any>;
 }
 
-export interface  ILayoutProps extends IPersistentObject {
+export interface  ILayoutProps extends IEasyPanel {
     width?: number;
     height?: number;
     fit?: boolean;
@@ -88,24 +89,26 @@ export class Layout extends React.Component<ILayoutProps,any> {
 
     componentDidMount() {
 
-        let layoutOptions = {
-            fit: this.props.fit,
-            width: this.props.width,
-            height: this.props.height,
-        };
+        // let layoutOptions = {
+        //     fit: this.props.fit,
+        //     width: this.props.width,
+        //     height: this.props.height,
+        // };
 
-
+        console.log("@@@@@@",this.props);
         window.setTimeout(()=> {
-            this.layoutInstance = ($(this.layoutContainer) as any).layout(layoutOptions);
+            this.layoutInstance = ($(this.layoutContainer) as any).layout(this.props);
 
             if (this.props.fitToBody)
                 this.layoutContainer = document.body;
 
             let renderPanel = (place: string)=> {
-                let item = this.props[place] as ILayoutPanel;
+                let item = (this.props as any)[place] as ILayoutPanel;
                 if (item) {
                     this.layoutInstance.layout('add', {
+
                         region: place,
+                        border: item.border,
                         title: item.title,
                         width: item.width,
                         height: item.height,
@@ -115,7 +118,7 @@ export class Layout extends React.Component<ILayoutProps,any> {
                         maxWidth: item.maxWidth,
                         maxHeight: item.maxHeight,
                     });
-                    ReactDOM.render(this.props[place]!.content!, this.layoutInstance.layout("panel", place)[0]);
+                    ReactDOM.render((this.props as any)[place]!.content!, this.layoutInstance.layout("panel", place)[0]);
                 }
             }
             renderPanel("north");

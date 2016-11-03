@@ -35,7 +35,13 @@ export class SqlTable extends SchemaObject<ISqlTable> {
 
     getDesignerFormat(): IObjectDesignerFormat {
         let ret = super.getDesignerFormat();
-        ret.attributes.push({attrName: "sqlName", title: "имя таблицы", _class: StringAttrEditor.getClassName()});
+
+        ret.attributes.push({
+            attrGroup: "таблица",
+            attrName: "sqlName",
+            attrTitle: "имя таблицы",
+            _class: StringAttrEditor.getClassName()
+        });
 
         let columnsEditor: IArrayAttrEditor = {
             attrName: "columns",

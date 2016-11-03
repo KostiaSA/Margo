@@ -1,4 +1,6 @@
-export interface IEasyBasePanel {
+import {IPersistentObject} from "../schema/SchemaObject";
+
+export interface IEasyBasePanel  extends  IPersistentObject{
     id?: string;
     title?: string;
     iconCls?: string;
@@ -14,7 +16,7 @@ export interface IEasyBasePanel {
     border?: boolean;
     doSize?: boolean;
     noheader?: boolean;
-    content?: string;
+    content?: React.ReactElement<any>;
     collapsible?: boolean;
     minimizable?: boolean;
     maximizable?: boolean;
@@ -55,7 +57,7 @@ export interface IEasyBasePanel {
     onMinimize?: ()=>void;
 }
 
-export interface IEasyPanel {
+export interface IEasyPanel extends IEasyBasePanel{
     onBeforeClose?: ()=>void;
     onClose?: ()=>void;
 }

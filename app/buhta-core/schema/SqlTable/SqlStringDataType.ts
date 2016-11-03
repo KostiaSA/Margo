@@ -31,7 +31,12 @@ export class SqlStringDataType extends SqlDataType<ISqlStringDataType> {
 
     getDesignerFormat(): IObjectDesignerFormat {
         let ret = super.getDesignerFormat();
-        ret.attributes.push({attrName: "maxLen", title: "макс. длина", _class: StringAttrEditor.getClassName()});
+        ret.attributes.push({
+            attrGroup: "инфо",
+            attrName: "maxLen",
+            attrTitle: "макс. длина",
+            _class: StringAttrEditor.getClassName()
+        });
         //ret.attributes.push({attrName: "description", title: "описание", _class: StringAttrEditor.getClassName()});
         ret.getTitle = (obj: ISqlDataType)=> {
             return `${SqlStringDataType.getClassTitle()}(${this.obj.maxLen})`;
