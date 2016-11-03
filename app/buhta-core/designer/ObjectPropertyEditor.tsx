@@ -5,6 +5,7 @@ import {IPersistentObject, PersistentObject} from "../schema/SchemaObject";
 import {objectClasses} from "../objectClasses";
 import {getObjectInstanceOfType} from "../utils/getObjectInstanceOfType";
 import {AttrEditor} from "./editors/AttrEditor";
+import {observable, autorun} from "mobx";
 
 export interface IObjectPropertEditorProps {
     editedObject: IPersistentObject;
@@ -36,8 +37,7 @@ export interface IEasyPropertyGridRow {
 }
 
 
-
-export class ObjectPropertEditor extends React.Component<IObjectPropertEditorProps,any> {
+export class ObjectPropertyEditor extends React.Component<IObjectPropertEditorProps,any> {
     constructor(props: any, context: any) {
         super(props, context);
         this.props = props;
@@ -148,6 +148,15 @@ export class ObjectPropertEditor extends React.Component<IObjectPropertEditorPro
             this.peInstance = ($(this.peContainer) as any).propertygrid(peOptions);
             //console.log(($(this.peContainer) as any).propertygrid("options").columns[0][1]);
         }, 1);
+
+        // autorun(()=> {
+        //     console.log("edtObj->", this.editedObject);
+        //     //this.setEditedObject(this.editedObject);
+        //     ($(this.peContainer) as any).propertygrid("loadData", this.getObjectEditors(this.editedObject, ""));
+        //
+        //     //this.loadEditors();
+        // });
+
 
     };
 

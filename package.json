@@ -36,6 +36,8 @@
     "jsondata": "^1.1.1",
     "jsrender": "^0.9.81",
     "lodash": "^4.16.4",
+    "mobx": "^2.6.1",
+    "mobx-react": "^3.5.8",
     "mssql": "^3.3.0",
     "react": "^15.3.2",
     "react-addons-shallow-compare": "^15.3.2",

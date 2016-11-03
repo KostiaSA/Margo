@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {Layout} from "../ui/Layout";
 import {IPersistentObject, PersistentObject, ISchemaObject} from "../schema/SchemaObject";
-import {ObjectPropertEditor} from "./ObjectPropertyEditor";
+import {ObjectPropertyEditor} from "./ObjectPropertyEditor";
 import {getObjectInstanceOfType} from "../utils/getObjectInstanceOfType";
 import {IArrayAttrEditor, ArrayAttrEditor} from "./editors/ArrayAttrEditor";
 import {IAction} from "./Action";
@@ -11,6 +11,8 @@ import {objectClasses} from "../objectClasses";
 import {EasyLinkButton} from "../easyui/linkbutton";
 import {Div} from "../easyui/Div";
 import {getSchema} from "../schema/Schema";
+import {autorun, observable} from "mobx";
+import {observer} from "mobx-react";
 
 export interface IObjectDesignerProps {
     editedObject: ISchemaObject;
@@ -19,6 +21,7 @@ export interface IObjectDesignerProps {
 
 let myId = Symbol();
 
+@observer
 export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     constructor(props: any, context: any) {
         super(props, context);
@@ -27,9 +30,10 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
         this.selectedObject = this.props.editedObject;
     }
 
+    @observable needToSave: boolean;
+    @observable selectedObject: IPersistentObject;
 
-    selectedObject: IPersistentObject;
-    propertyEditorInstance: ObjectPropertEditor;
+    propertyEditorInstance: ObjectPropertyEditor;
 
     handleObjectChange = ()=> {
         this.reloadTreeSelectedNode();
@@ -39,13 +43,13 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
 
     renderPropertyEditor(): JSX.Element {
         return (
-            <ObjectPropertEditor
+            <ObjectPropertyEditor
                 ref={(e)=>this.propertyEditorInstance=e}
                 editedObject={this.selectedObject}
                 onChange={this.handleObjectChange}
             >
 
-            </ObjectPropertEditor>);
+            </ObjectPropertyEditor>);
     }
 
 
@@ -71,13 +75,19 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     layoutContainer: Layout;
 
     render(): JSX.Element {
-        //console.log("render obj -designer")
+        console.log("render obj -designer")
         return (
-            <Layout ref={(e)=>this.layoutContainer=e} _class="Layout" fit={true} panels={[
-                            {_class:"LayoutPanel", region:"north",  content:this.renderToolbar(), height:32},
-                            {_class:"LayoutPanel", title:"Состав объекта", region:"center",  content:this.renderTree()},
-                            {_class:"LayoutPanel", title:"Свойства", region:"east",width:350, split:true, content:this.renderPropertyEditor()},
-            ]}/>
+            <Layout ref={(e)=>this.layoutContainer=e}
+                    _class="Layout"
+                    fit={true}
+                    panels={[
+                              //{_class:"LayoutPanel", region:"north",  content:<div>?</div>/*this.renderToolbar()*/, height:32},
+                              {_class:"LayoutPanel", title:"Состав объекта", region:"center",  content:this.renderTree()},
+                              {_class:"LayoutPanel", title:"Свойства", region:"east",width:350, split:true, content:this.renderPropertyEditor()},
+                           ]}
+                    north={{_class:"LayoutPanel", height:62}}
+                    northContent={this.renderToolbar()}
+            />
         )
 
 
@@ -205,6 +215,12 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
             this.easyTree("loadData", [this.createTreeData(this.props.editedObject, "root")]);
         }, 1);
 
+        // console.log("autorun-987-start:")
+        // autorun(()=> {
+        //     console.log("autorun-987:"+this.needToSave)
+        //     this.forceUpdate();
+        // });
+
     };
 
     renderTree(): JSX.Element {
@@ -213,7 +229,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
 
 
     forceUpdateToolbar() {
-        this.layoutContainer.forceUpdateNorth(this.renderToolbar());
+        //this.layoutContainer.forceUpdateNorth(this.renderToolbar());
     }
 
     saveEditedObject = ()=> {
@@ -229,11 +245,10 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
 
     }
 
-    needToSave: boolean;
+
 
     renderToolbar(): JSX.Element {
         return (
-
             <div>
                 <EasyLinkButton
                     plain
@@ -244,7 +259,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
                 />
             </div>
 
-        );
+        ) as any;
     }
 
 }

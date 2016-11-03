@@ -11,6 +11,7 @@ import {convertSchemas} from "../test_convert_tmc_to_schemaobject";
 import {test_create_new_schema_app} from "../test_create_new_schema_app";
 import {SchemaApp} from "./schema/SchemaApp/SchemaApp";
 import {SchemaFolder} from "./schema/SchemaFolder/SchemaFolder";
+import {test_mobx} from "../test_mobx";
 
 export function init(){
     registerClass(SchemaApp);
@@ -30,3 +31,4 @@ export function init(){
 
 let x= convertSchemas;
 let y=test_create_new_schema_app;
+let z=test_mobx;

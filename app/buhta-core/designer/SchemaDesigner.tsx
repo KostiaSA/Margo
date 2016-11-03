@@ -78,7 +78,7 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
         return (
             <Layout _class="Layout" fit={true} panels={[
                             {_class:"LayoutPanel", title:"Схема приложения", region:"west",split:true, width:450, content:this.renderTree()},
-                            {_class:"LayoutPanel", title:"табсы", region:"center",content:this.renderTabs()},
+                            {_class:"LayoutPanel", region:"center",content:this.renderTabs()},
             ]}/>
         )
 
@@ -288,7 +288,7 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
 
         window.setTimeout(()=> {
             this.easyTree(treeOptions);
-            this.createTreeData(1)
+            this.createTreeData(2)
                 .then(()=> {
                     this.easyTree("loadData", this.nodes);
                 })
