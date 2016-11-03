@@ -8,12 +8,14 @@ import {IAction} from "./Action";
 import {getRandomString} from "../utils/getRandomString";
 import {objectClasses} from "../objectClasses";
 import {IEasyTreeNode} from "../easyui/tree";
-import {getSchemaObjectCollection} from "../schema/getSchemaObjectCollection";
+//import {getSchemaObjectCollection} from "../schema/getSchemaObjectCollection";
 import {compareNumbers} from "../utils/compareNumbers";
 import {renderToStaticHtml} from "../utils/renderToStaticHtml";
 import {IEasyTabsPanel} from "../easyui/tabs";
 import isDivisibleBy = require("validator/lib/isDivisibleBy");
 import {ObjectDesigner} from "./ObjectDesigner";
+import {getSchema} from "../schema/Schema";
+import {throws} from "assert";
 
 
 export interface ISchemaDesignerProps {
@@ -77,8 +79,8 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
 
         return (
             <Layout _class="Layout" fit={true}
-                            west={{_class:"LayoutPanel", title:"Схема приложения", split:true, width:450, content:this.renderTree()}}
-                            center={{_class:"LayoutPanel", region:"center",content:this.renderTabs()}}
+                    west={{_class:"LayoutPanel", title:"Схема приложения", split:true, width:450, content:this.renderTree()}}
+                    center={{_class:"LayoutPanel", region:"center",content:this.renderTabs()}}
             />
         )
 
@@ -169,26 +171,33 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
         //node.text = this.treeNodeFormatter(node);
         //this.easyTree("update", node);
 
-        let tab: IEasyTabsPanel = {
-            title: node.obj.name,
-            closable: true,
-            selected: true,
-            content: renderToStaticHtml(<div id={"a"+node.obj._id}>это 222222222 инфо</div>)
-        };
+        getSchema().resetObjectCache(node.obj._id!);
+        getSchema().getObject(node.obj._id!)
+            .then((obj: ISchemaObject)=> {
+                node.obj = obj;
+                let tab: IEasyTabsPanel = {
+                    title: node.obj.name,
+                    closable: true,
+                    selected: true,
+                    content: renderToStaticHtml(<div id={"a"+node.obj._id}>это 222222222 инфо</div>)
+                };
 
-        let tabElement = this.easyTabs("add", tab);
+                let tabElement = this.easyTabs("add", tab);
 
-        console.log(tabElement.find("#a"+node.obj._id));
+                //console.log(tabElement.find("#a"+node.obj._id));
 
-        ReactDOM.render(
-            (
-                <ObjectDesigner editedObject={node.obj}>
+                ReactDOM.render(
+                    (
+                        <ObjectDesigner editedObject={node.obj}>
 
-                </ObjectDesigner>
-            ),
-            tabElement.find("#a"+node.obj._id).parent()[0]
-        );
-
+                        </ObjectDesigner>
+                    ),
+                    tabElement.find("#a" + node.obj._id).parent()[0]
+                );
+            })
+            .catch((e: any)=> {
+                throw e
+            });
     };
 
 
@@ -331,7 +340,7 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
         this.nodes = [];
         let nodeList: any = {};
 
-        let objs = await (await getSchemaObjectCollection()).find().toArray();
+        let objs = await (await getSchema().getSchemaObjectCollection()).find().toArray();
 
         objs.forEach((dataSourceItem: ISchemaObject, index: number) => {
             let node: ITreeNode = {

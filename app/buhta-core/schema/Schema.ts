@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import {ISchemaObject, IPersistentObject, PersistentObject, SchemaObject} from "./SchemaObject";
-import {MongoClient, Db, UpdateWriteOpResult} from "mongodb";
+import {MongoClient, Db, UpdateWriteOpResult, Collection} from "mongodb";
 import {sleep} from "../utils/sleep";
 import {getInstantPromise} from "../utils/getInstantPromise";
 import {objectClasses} from "../objectClasses";
@@ -48,6 +48,11 @@ export class Schema {
         delete this.objects_cache[id];
     }
 
+    async getSchemaObjectCollection(): Promise<Collection> {
+        let db = await this.getMongoDb();
+        return db.collection('SchemaObject');
+    }
+
     async getObject(id: string): Promise<ISchemaObject> {
         let obj = this.objects_cache[id];
         if (obj !== undefined) {
@@ -77,9 +82,13 @@ export class Schema {
         if (obj._id === undefined)
             obj._id = getRandomString();
         console.log('запись', obj);
+
+        // конвертацию через JSON не убирать, мы избавляемся от observable, иначе массивы не сохраняются
         let result = await collection.updateOne({_id: obj._id}, JSON.parse(JSON.stringify(obj)), {upsert: true});
+
         if (result.upsertedCount + result.modifiedCount !== 1)
             throw `error saving SchemaObject (_id=${obj._id})`;
+        this.objects_cache[obj._id]=obj;
         return getInstantPromise<void>(undefined);
     }
 

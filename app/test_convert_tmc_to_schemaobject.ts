@@ -2,8 +2,7 @@ import {cloneSqlToMongo} from "./cloneSqlToMongo";
 var sql = require('mssql');
 import {MongoClient, Db} from "mongodb";
 import {sleep} from "./buhta-core/utils/sleep";
-import {getSchemaDb} from "./buhta-core/schema/getSchemaDb";
-import {getSchemaObjectCollection} from "./buhta-core/schema/getSchemaObjectCollection";
+import {getSchema} from "./buhta-core/schema/Schema";
 
 var config = {
     user: 'sa',
@@ -45,7 +44,9 @@ export async function testMongoConnect() {
         //let db = await getSchemaDb();
 
         //var collection = db.collection('SchemaObject');
-        (await getSchemaObjectCollection()).find().limit(10000).toArray().then((a: any[])=> {
+        let coll=await getSchema().getSchemaObjectCollection();
+
+        coll.find().limit(10000).toArray().then((a: any[])=> {
             console.log(i, a);
         }).catch((err: any)=> {
             console.error(err);

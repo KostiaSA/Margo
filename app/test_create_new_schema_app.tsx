@@ -1,13 +1,14 @@
-import {getSchemaObjectCollection} from "./buhta-core/schema/getSchemaObjectCollection";
+
 import {SchemaApp} from "./buhta-core/schema/SchemaApp/SchemaApp";
 import {SchemaFolder} from "./buhta-core/schema/SchemaFolder/SchemaFolder";
 import {SqlTable} from "./buhta-core/schema/SqlTable/SqlTable";
 import {SqlTableColumn} from "./buhta-core/schema/SqlTable/SqlTableColumn";
 import {SqlStringDataType} from "./buhta-core/schema/SqlTable/SqlStringDataType";
+import {getSchema} from "./buhta-core/schema/Schema";
 
 export async function test_create_new_schema_app() {
     try {
-        let so = await getSchemaObjectCollection();
+        let so = await getSchema().getSchemaObjectCollection();
         await so.drop();
 
         let app = SchemaApp.createNew();

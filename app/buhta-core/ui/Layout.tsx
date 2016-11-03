@@ -5,7 +5,7 @@ import {IPersistentObject} from "../schema/SchemaObject";
 
 
 export interface  ILayoutPanel extends IPersistentObject {
-  //  region?: "center" | "north" | "west" | "south" | "east";
+    //  region?: "center" | "north" | "west" | "south" | "east";
     title?: string;
     width?: number;
     split?: boolean;
@@ -41,11 +41,22 @@ export class Layout extends React.Component<ILayoutProps,any> {
     layoutInstance: any;
 
     componentDidUpdate(prevProps: ILayoutProps) {
-        console.log("componentDidUpdate: north!!!");
-        if (prevProps.north!.content !== this.props.north!.content) {
-            console.log("componentDidUpdate: north");
-            if (this.layoutInstance)
-                ReactDOM.render(this.props.north!.content!, this.layoutInstance.layout("panel", "north")[0]);
+        if (this.layoutInstance) {
+            if (prevProps.north && this.props.north && prevProps.north.content !== this.props.north.content) {
+                ReactDOM.render(this.props.north.content!, this.layoutInstance.layout("panel", "north")[0]);
+            }
+            if (prevProps.south && this.props.south && prevProps.south.content !== this.props.south.content) {
+                ReactDOM.render(this.props.south.content!, this.layoutInstance.layout("panel", "south")[0]);
+            }
+            if (prevProps.west && this.props.west && prevProps.west.content !== this.props.west.content) {
+                ReactDOM.render(this.props.west.content!, this.layoutInstance.layout("panel", "west")[0]);
+            }
+            if (prevProps.east && this.props.east && prevProps.east.content !== this.props.east.content) {
+                ReactDOM.render(this.props.east.content!, this.layoutInstance.layout("panel", "east")[0]);
+            }
+            if (prevProps.center && this.props.center && prevProps.center.content !== this.props.center.content) {
+                ReactDOM.render(this.props.center.content!, this.layoutInstance.layout("panel", "center")[0]);
+            }
         }
     }
 
@@ -90,23 +101,7 @@ export class Layout extends React.Component<ILayoutProps,any> {
             if (this.props.fitToBody)
                 this.layoutContainer = document.body;
 
-
-            // this.props.panels.forEach((item: ILayoutPanel)=> {
-            //     this.layoutInstance.layout('add', {
-            //         region: item.region,
-            //         title: item.title,
-            //         width: item.width,
-            //         height: item.height,
-            //         split: item.split,
-            //         minWidth: item.minWidth,
-            //         minHeight: item.minHeight,
-            //         maxWidth: item.maxWidth,
-            //         maxHeight: item.maxHeight,
-            //     });
-            //     ReactDOM.render(item.content!, this.layoutInstance.layout("panel", item.region)[0]);
-            // });
-
-            let renderPanel=(place:string)=> {
+            let renderPanel = (place: string)=> {
                 let item = this.props[place] as ILayoutPanel;
                 if (item) {
                     this.layoutInstance.layout('add', {
@@ -131,26 +126,6 @@ export class Layout extends React.Component<ILayoutProps,any> {
 
 
         }, 1);
-
-        // this.layoutInstance.layout('add', {
-        //     region: 'west',
-        //     width: 180,
-        //     title: 'West Title',
-        //     split: true,
-        //     collapsedContent:"жопа",
-        //     tools: [{
-        //         iconCls: 'icon-add',
-        //         handler: this.hanler1
-        //     }, {
-        //         iconCls: 'icon-remove',
-        //         handler: function () {
-        //             alert('remove')
-        //         }
-        //     }]
-        // });
-
-        // ReactDOM.render(this.renderWest(), this.layoutInstance.layout('panel', 'west')[0]);
-        // ReactDOM.render(this.renderWest(), this.layoutInstance.layout('panel', 'center')[0]);
 
     };
 
