@@ -1,9 +1,15 @@
-
 import {ISchemaObject, PersistentObject, SchemaObject} from "../SchemaObject";
 import {IObjectDesignerFormat} from "../../designer/ObjectDesignerFormat";
+import {ISchemaComponent} from "../SchemaComponent/SchemaComponent";
+import {StringAttrEditor} from "../../designer/editors/StringAttrEditor";
+import {
+    SchemaObjectAttrEditor, ISchemaObjectAttrEditor,
+    ISchemaObjectLookupItem
+} from "../../designer/editors/SchemaObjectAttrEditor";
+import {getSchema} from "../Schema";
 
 export interface ISchemaApp extends ISchemaObject {
-
+    startPageId?: string;
 }
 
 export class SchemaApp extends SchemaObject<ISchemaApp> {
@@ -17,15 +23,38 @@ export class SchemaApp extends SchemaObject<ISchemaApp> {
     }
 
     static createNew(): ISchemaApp {
-        let obj:ISchemaApp=SchemaObject.createNew();
-        obj._class=this.getClassName();
-        obj.name= "Новое приложение";
+        let obj: ISchemaApp = SchemaObject.createNew();
+        obj._class = this.getClassName();
+        obj.name = "Новое приложение";
         return obj;
+    }
+
+    async getObjList(): Promise<ISchemaObjectLookupItem[]> {
+
+        let coll = await getSchema().getSchemaObjectCollection();
+
+        let objs = await coll.find({},
+            {
+                name: 1
+            })
+            .toArray();
+
+        return objs.map<ISchemaObjectLookupItem>((item: ISchemaObject)=> {
+            return {_id: item._id!, text: item.name}
+        });
+
     }
 
     getDesignerFormat(): IObjectDesignerFormat {
         let ret = super.getDesignerFormat();
-        //ret.attributes.push({attrName: "sqlName", title: "имя таблицы", _class: StringAttrEditor.getClassName()});
+
+        ret.attributes.push({
+            attrGroup: "приложение",
+            attrName: "startPageId",
+            attrTitle: "стартовая страница",
+            _class: SchemaObjectAttrEditor.getClassName(),
+            getLookupList: this.getObjList
+        } as ISchemaObjectAttrEditor);
 
         ret.getTitle = (obj: ISchemaApp)=> {
             return obj.name + "  (" + SchemaApp.getClassTitle() + ")";

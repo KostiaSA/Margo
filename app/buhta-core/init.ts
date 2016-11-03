@@ -12,9 +12,12 @@ import {test_create_new_schema_app} from "../test_create_new_schema_app";
 import {SchemaApp} from "./schema/SchemaApp/SchemaApp";
 import {SchemaFolder} from "./schema/SchemaFolder/SchemaFolder";
 import {test_mobx} from "../test_mobx";
+import {SchemaComponent} from "./schema/SchemaComponent/SchemaComponent";
+import {SchemaObjectAttrEditor} from "./designer/editors/SchemaObjectAttrEditor";
 
 export function init(){
     registerClass(SchemaApp);
+    registerClass(SchemaComponent);
 
     registerClass(SchemaFolder);
 
@@ -27,6 +30,7 @@ export function init(){
     registerClass(DateTimeAttrEditor);
     registerClass(ArrayAttrEditor);
     registerClass(ObjectAttrEditor);
+    registerClass(SchemaObjectAttrEditor);
 }
 
 let x= convertSchemas;

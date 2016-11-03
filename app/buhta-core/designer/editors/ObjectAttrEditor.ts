@@ -31,13 +31,23 @@ export class ObjectAttrEditor extends AttrEditor<IObjectAttrEditor> {
             type: "combobox",
             options: {
                 limitToList: true,
-                data: this.edt.getObjectClassesList().map((item: Function)=> {
+                // data: this.edt.getObjectClassesList().map((item: Function)=> {
+                //
+                //     let title = (item as any).getClassTitle();
+                //     let instance = (item as any).getClassName();
+                //
+                //     return {value: instance, text: title};
+                // }),
+                loader: (param: any, success: (data: any[])=>{}, error: ()=>{})=> {
+                    success(this.edt.getObjectClassesList().map((item: Function)=> {
 
-                    let title = (item as any).getClassTitle();
-                    let instance = (item as any).getClassName();
+                        let title = (item as any).getClassTitle();
+                        let instance = (item as any).getClassName();
 
-                    return {value: instance, text: title};
-                })
+                        return {value: instance, text: title};
+                    }))
+
+                }
             }
         };
     }
