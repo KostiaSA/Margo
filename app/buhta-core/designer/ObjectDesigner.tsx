@@ -34,7 +34,8 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     //observableEditedObject:any;
     @observable editedObjectAsJson: string;
     @observable needToSave: boolean;
-    @observable selectedObject: IPersistentObject;
+
+    selectedObject: IPersistentObject;
 
     propertyEditorInstance: ObjectPropertyEditor;
 
@@ -121,8 +122,6 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
 
     componentDidMount() {
 
-
-
         let treeOptions = {
             //  data: здесь не заполнять !!!
             onSelect: (node: any)=> {
@@ -194,12 +193,23 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
         }, 1);
 
 
+        observable(this.props.editedObject);
         autorun(() => {
             //console.log("autorun-observableEditedObject");
             this.needToSave = this.editedObjectAsJson !== JSON.stringify(this.props.editedObject);
+            this.reloadTreeSelectedNode();
         });
 
     };
+
+    reloadTreeSelectedNode() {
+        var node = this.easyTree("getSelected");
+        if (node && node.obj && node.obj._class) {
+            let newNode = this.createTreeData(node.obj, node.id);
+            node.text = newNode.text;
+            this.easyTree("update", node);
+        }
+    }
 
     saveEditedObject = ()=> {
         getSchema().saveObject(this.props.editedObject)
@@ -212,6 +222,7 @@ export class ObjectDesigner extends React.Component<IObjectDesignerProps,any> {
     }
 
     renderPropertyEditor(): JSX.Element {
+        console.log("renderPropertyEditor");
         return (
             <ObjectPropertyEditor
                 ref={(e)=>this.propertyEditorInstance=e}

@@ -340,7 +340,13 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
         this.nodes = [];
         let nodeList: any = {};
 
-        let objs = await (await getSchema().getSchemaObjectCollection()).find().toArray();
+        let objs = await (await getSchema().getSchemaObjectCollection())
+            .find({},
+                {
+                    parentObjectId: 1,
+                    name: 1
+                })
+            .toArray();
 
         objs.forEach((dataSourceItem: ISchemaObject, index: number) => {
             let node: ITreeNode = {
