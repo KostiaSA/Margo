@@ -1,6 +1,7 @@
 import {IEasyWindow} from "./window";
+import {IEasyLinkButtonProps} from "./linkbutton";
 
 export  interface IEasyDialog extends IEasyWindow{
-    toolbar?:React.ReactElement<any>;
-    buttons?:React.ReactElement<any>;
+    toolbar?:IEasyLinkButtonProps[];
+    buttons?:IEasyLinkButtonProps[];
 }

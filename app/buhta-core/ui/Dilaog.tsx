@@ -39,29 +39,6 @@ export class Dialog extends React.Component<IDialogProps,any> {
         }
     }
 
-    // forceUpdateSouth(content: any) {
-    //     if (this.DialogInstance)
-    //         ReactDOM.render(content, this.DialogInstance.Dialog("panel", "south")[0]);
-    // }
-    //
-    // forceUpdateWest(content: any) {
-    //     if (this.DialogInstance)
-    //         ReactDOM.render(content, this.DialogInstance.Dialog("panel", "west")[0]);
-    // }
-    //
-    // forceUpdateEast(content: any) {
-    //     if (this.DialogInstance)
-    //         ReactDOM.render(content, this.DialogInstance.Dialog("panel", "east")[0]);
-    // }
-    //
-    // forceUpdateCenter(content: any) {
-    //     if (this.DialogInstance)
-    //         ReactDOM.render(content, this.DialogInstance.Dialog("panel", "center")[0]);
-    // }
-
-    //node:Element;
-
-
     dialogResult: any;
 
     handleOnClose = ()=> {
@@ -79,8 +56,6 @@ export class Dialog extends React.Component<IDialogProps,any> {
 
             let dialogProps = getDeepClone<IDialogProps>(this.props) as any;
             dialogProps.content = renderToStaticHtml(<div id={contentId}></div>);
-            dialogProps.toolbar = undefined;
-            dialogProps.buttons = [{text:"Ok"}];
             dialogProps.onClose = this.handleOnClose;
 
             this.easyDialog(dialogProps);
@@ -98,7 +73,7 @@ export class Dialog extends React.Component<IDialogProps,any> {
     render(): JSX.Element {
         console.log("render Dialog", this.props);
         return (
-            <div id="xxx" ref={(e)=>this.dialogContainer=e}></div>
+            <div ref={(e)=>this.dialogContainer=e}></div>
         )
 
     }
