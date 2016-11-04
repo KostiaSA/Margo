@@ -12,6 +12,7 @@ import {ISchemaObject, SchemaObject} from "./buhta-core/schema/SchemaObject";
 import {GridLayout} from "./buhta-core/component/GridLayout";
 import {PersistentPage, IPersistentPageProps, PersistentPageComponent} from "./buhta-core/component/PersistentPage";
 import {IDialogProps, showDialog} from "./buhta-core/ui/Dilaog";
+import {TestDialogContent} from "./testDialogContent";
 
 
 interface IUser extends mongoose.Document {
@@ -224,7 +225,8 @@ export class TestPage extends React.Component<any,any> {
                       _class:"",
                       height:300,
                       width:400,
-                      content:<div>жоп1</div>
+                 //     border:"thin",
+                          content:<TestDialogContent/>
                     }
                     showDialog(d);
                     }}>test Dialog

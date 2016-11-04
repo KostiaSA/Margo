@@ -3,6 +3,8 @@ import * as ReactDOM from "react-dom";
 import {IEasyDialog} from "../easyui/dialog";
 import {getDeepClone} from "../utils/getDeepClone";
 import isDivisibleBy = require("validator/lib/isDivisibleBy");
+import {getRandomString} from "../utils/getRandomString";
+import {renderToStaticHtml} from "../utils/renderToStaticHtml";
 
 export interface  IDialogProps extends IEasyDialog {
 }
@@ -65,24 +67,25 @@ export class Dialog extends React.Component<IDialogProps,any> {
     handleOnClose = ()=> {
         if (this.props.onClose)
             this.props.onClose(this.dialogResult);
+        this.easyDialog("destroy");
     };
 
+
     componentDidMount() {
-//        this.node = document.createElement("div");
-        //      document.body.appendChild(this.node);
 
         window.setTimeout(()=> {
 
+            let contentId="a"+getRandomString();
+
             let dialogProps = getDeepClone<IDialogProps>(this.props) as any;
-            dialogProps.content = "<div>content</div>";
-            dialogProps.toolbar = ["222"];
-            dialogProps.buttons = ["222"];
+            dialogProps.content = renderToStaticHtml(<div id={contentId}></div>);
+            dialogProps.toolbar = undefined;
+            dialogProps.buttons = [{text:"Ok"}];
             dialogProps.onClose = this.handleOnClose;
 
             this.easyDialog(dialogProps);
-           // this.easyDialog("open");
 
-//            ReactDOM.render((this.props as any)[place]!.content!, this.dialogInstance.Dialog("panel", place)[0]);
+            ReactDOM.render(this.props.content!, $("#"+contentId)[0]);
 
         }, 1);
 
@@ -95,7 +98,7 @@ export class Dialog extends React.Component<IDialogProps,any> {
     render(): JSX.Element {
         console.log("render Dialog", this.props);
         return (
-            <div ref={(e)=>this.dialogContainer=e}></div>
+            <div id="xxx" ref={(e)=>this.dialogContainer=e}></div>
         )
 
     }
@@ -103,9 +106,6 @@ export class Dialog extends React.Component<IDialogProps,any> {
 }
 
 export function showDialog<T>(param: IDialogProps): Promise<T> {
-
-    let dialogDiv = document.createElement("div");
-    document.body.appendChild(dialogDiv);
 
     return new Promise<T>(
         (resolve: (obj: T) => void, reject: (error: string) => void) => {
@@ -116,12 +116,11 @@ export function showDialog<T>(param: IDialogProps): Promise<T> {
                 if (clonedParam.onClose)
                     clonedParam.onClose(dialogResult);
                 resolve(dialogResult);
-                document.body.removeChild(dialogDiv);
             };
 
             ReactDOM.render(
                 <Dialog {...param}/>,
-                dialogDiv
+                document.createElement("div")
             );
 
 
