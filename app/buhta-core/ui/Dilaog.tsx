@@ -65,7 +65,7 @@ export class Dialog extends React.Component<IDialogProps,any> {
     handleOnClose = ()=> {
         if (this.props.onClose)
             this.props.onClose(this.dialogResult);
-    }
+    };
 
     componentDidMount() {
 //        this.node = document.createElement("div");
@@ -73,14 +73,14 @@ export class Dialog extends React.Component<IDialogProps,any> {
 
         window.setTimeout(()=> {
 
-            let dialogProps = getDeepClone<IDialogProps>(this.props);
-            dialogProps.content = <div>content</div>;
-            dialogProps.toolbar = <div>toolbar</div>;
-            dialogProps.buttons = <div>buttons</div>;
+            let dialogProps = getDeepClone<IDialogProps>(this.props) as any;
+            dialogProps.content = "<div>content</div>";
+            dialogProps.toolbar = ["222"];
+            dialogProps.buttons = ["222"];
             dialogProps.onClose = this.handleOnClose;
 
             this.easyDialog(dialogProps);
-            this.easyDialog("open");
+           // this.easyDialog("open");
 
 //            ReactDOM.render((this.props as any)[place]!.content!, this.dialogInstance.Dialog("panel", place)[0]);
 
@@ -89,11 +89,11 @@ export class Dialog extends React.Component<IDialogProps,any> {
     };
 
     easyDialog = (arg1: any, arg2?: any): any=> {
-        return ($(this.dialogContainer) as any).tree(arg1, arg2);
-    }
+        return ($(this.dialogContainer) as any).dialog(arg1, arg2);
+    };
 
     render(): JSX.Element {
-        console.log("render Dialog");
+        console.log("render Dialog", this.props);
         return (
             <div ref={(e)=>this.dialogContainer=e}></div>
         )
@@ -117,7 +117,7 @@ export function showDialog<T>(param: IDialogProps): Promise<T> {
                     clonedParam.onClose(dialogResult);
                 resolve(dialogResult);
                 document.body.removeChild(dialogDiv);
-            }
+            };
 
             ReactDOM.render(
                 <Dialog {...param}/>,

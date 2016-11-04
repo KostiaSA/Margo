@@ -11,6 +11,7 @@ import {ISqlStringDataType, SqlStringDataType} from "./buhta-core/schema/SqlTabl
 import {ISchemaObject, SchemaObject} from "./buhta-core/schema/SchemaObject";
 import {GridLayout} from "./buhta-core/component/GridLayout";
 import {PersistentPage, IPersistentPageProps, PersistentPageComponent} from "./buhta-core/component/PersistentPage";
+import {IDialogProps, showDialog} from "./buhta-core/ui/Dilaog";
 
 
 interface IUser extends mongoose.Document {
@@ -218,24 +219,38 @@ export class TestPage extends React.Component<any,any> {
         else
             return (
                 <div>тестовая стра!
-                    <button onClick={this.handleClick1}>mongo test1</button>
-                    <button onClick={this.handleClick2}>test2</button>
-                    <br/>
-                    <button onClick={this.handleClick3}>MONGO DIRECT test</button>
-                    <br/>
-                    <br/>
-                    <button onClick={this.handleClick4}>MONGO CONVERT MAG3305</button>
-                    <br/>
-                    <br/>
-                    <button onClick={this.handleClickSchema}>TEST SCHEMA CREATE</button>
-                    <br/>
-                    <button onClick={this.handleClickSchemaLoad}>TEST SCHEMA LOAD</button>
-                    <br/>
-                    <PersistentPageComponent {...this.ppProps}>
-
-                    </PersistentPageComponent>
+                    <button onClick={()=>{
+                    let d:IDialogProps={
+                      _class:"",
+                      height:300,
+                      width:400,
+                      content:<div>жоп1</div>
+                    }
+                    showDialog(d);
+                    }}>test Dialog
+                    </button>
                 </div>
-            );
+            )
+        // return (
+        //     <div>тестовая стра!
+        //         <button onClick={this.handleClick1}>mongo test1</button>
+        //         <button onClick={this.handleClick2}>test2</button>
+        //         <br/>
+        //         <button onClick={this.handleClick3}>MONGO DIRECT test</button>
+        //         <br/>
+        //         <br/>
+        //         <button onClick={this.handleClick4}>MONGO CONVERT MAG3305</button>
+        //         <br/>
+        //         <br/>
+        //         <button onClick={this.handleClickSchema}>TEST SCHEMA CREATE</button>
+        //         <br/>
+        //         <button onClick={this.handleClickSchemaLoad}>TEST SCHEMA LOAD</button>
+        //         <br/>
+        //         <PersistentPageComponent {...this.ppProps}>
+        //
+        //         </PersistentPageComponent>
+        //     </div>
+        // );
     }
 
 

@@ -16,6 +16,7 @@ import isDivisibleBy = require("validator/lib/isDivisibleBy");
 import {ObjectDesigner} from "./ObjectDesigner";
 import {getSchema} from "../schema/Schema";
 import {throws} from "assert";
+import {TestPage} from "../../TestPage";
 
 
 export interface ISchemaDesignerProps {
@@ -305,10 +306,19 @@ export class SchemaDesigner extends React.Component<ISchemaDesignerProps,any> {
             let tab: IEasyTabsPanel = {
                 title: "info",
                 border:false,
-                content: renderToStaticHtml(<div>это инфо</div>)
+                content: renderToStaticHtml(<div id="testinfo242290">это инфо</div>)
             };
 
             this.easyTabs("add", tab);
+
+            ReactDOM.render(
+                (
+                    <TestPage>
+
+                    </TestPage>
+                ),
+                $(document).find("#testinfo242290").parent()[0]
+            );
 
         }, 1);
 
