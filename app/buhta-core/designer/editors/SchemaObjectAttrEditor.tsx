@@ -76,11 +76,9 @@ export class SchemaObjectAttrEditor extends AttrEditor<ISchemaObjectAttrEditor> 
             else {
                 getSchema().getObjectName(value)
                     .then((name:string)=>{
-                       console.log(name);
                        $("#"+divId).html(renderToStaticHtml(<div id={divId}>{name}</div>));
                     })
                     .catch((error:any)=>{
-                        console.log(error);
                         $("#"+divId).html(renderToStaticHtml(<div id={divId}>{"<ошибка>"}</div>));
 
                     });

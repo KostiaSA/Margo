@@ -7,6 +7,7 @@ import {IEasyPanel, IEasyBasePanel} from "../easyui/panel";
 
 export interface  ILayoutPanel extends IEasyBasePanel {
     //  region?: "center" | "north" | "west" | "south" | "east";
+    border?: boolean;
     title?: string;
     width?: number;
     split?: boolean;

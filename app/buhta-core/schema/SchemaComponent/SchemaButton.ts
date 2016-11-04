@@ -3,26 +3,27 @@ import {ISchemaObject, PersistentObject, SchemaObject} from "../SchemaObject";
 import {IObjectDesignerFormat} from "../../designer/ObjectDesignerFormat";
 import {Action} from "../../designer/Action";
 import {ArrayAttrEditor, IArrayAttrEditor} from "../../designer/editors/ArrayAttrEditor";
+import {ISchemaComponent} from "./SchemaComponent";
 
-export interface ISchemaComponent extends ISchemaObject {
-    children: ISchemaComponent[];
+export interface ISchemaButton extends ISchemaComponent {
+    text?:string;
 
 }
 
-export class SchemaComponent extends SchemaObject<ISchemaComponent> {
+export class SchemaButton extends SchemaObject<ISchemaButton> {
 
     static getClassName(): string {
-        return "buhta.SchemaComponent";
+        return "buhta.SchemaButton";
     }
 
     static getClassTitle(): string {
-        return "компонент";
+        return "button";
     }
 
-    static createNew(): ISchemaComponent {
-        let obj:ISchemaComponent=SchemaObject.createNew() as any;
+    static createNew(): ISchemaButton {
+        let obj:ISchemaButton=SchemaObject.createNew() as any;
         obj._class=this.getClassName();
-        obj.name= "Новый компонент";
+        obj.name= "button";
         obj.children=[];
         return obj;
     }
@@ -31,24 +32,8 @@ export class SchemaComponent extends SchemaObject<ISchemaComponent> {
         let ret = super.getDesignerFormat();
         //ret.attributes.push({attrName: "sqlName", title: "имя таблицы", _class: StringAttrEditor.getClassName()});
 
-        let childrenEditor: IArrayAttrEditor = {
-            attrName: "children",
-            title: "компоненты",
-            _class: ArrayAttrEditor.getClassName(),
-            actions: [
-                {
-                    _class: Action.getClassName(), text: "добавить компонент", onClick: ()=> {
-                    let newCol = SchemaComponent.createNew();
-                    this.obj.children.push(newCol);
-                    return newCol;
-                }
-                }
-            ]
-        };
-        ret.arrays.push(childrenEditor);
-
-        ret.getTitle = (obj: ISchemaComponent)=> {
-            return obj.name + "  (" + SchemaComponent.getClassTitle() + ")";
+        ret.getTitle = (obj: ISchemaButton)=> {
+            return obj.text + "  (" + SchemaButton.getClassTitle() + ")";
         };
 
         return ret;

@@ -13,7 +13,6 @@ export interface IEasyBasePanel  extends  IPersistentObject{
     bodyCls?: string;
     style?: any;
     fit?: boolean;
-    border?: boolean;
     doSize?: boolean;
     noheader?: boolean;
     content?: React.ReactElement<any>;
@@ -58,6 +57,7 @@ export interface IEasyBasePanel  extends  IPersistentObject{
 }
 
 export interface IEasyPanel extends IEasyBasePanel{
+    border?: boolean;
     onBeforeClose?: ()=>void;
     onClose?: ()=>void;
 }
