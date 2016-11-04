@@ -15,4 +15,6 @@ export interface IEasyWindow extends IEasyBasePanel {
     modal?: boolean;
     border?: boolean | string;
     constrain?: boolean;
+    onBeforeClose?: ()=>void;
+    onClose?: (dialogResult:any)=>void;
 }
